@@ -36,8 +36,8 @@ public class MedicineManagementForm extends JFrame {
 
     /* For Search Form Panel */
     private JPanel searchFormPanel; // Panel untuk 1 Search Form Panel
-    private JLabel searchFieldLabel;
-    private JTextField searchField;
+    private JLabel searchLabel;
+    private JTextField searchTextField;
     private JButton searchButton;
 
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -48,6 +48,13 @@ public class MedicineManagementForm extends JFrame {
         formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 25));
+
+        // searchFormPanel = new JPanel();
+        // searchFormPanel.setLayout(new GridLayout(2, 2, 4, 4));
+
+        searchPanel = new JPanel();
+        searchPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        searchPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 25));
 
         idPanel = new JPanel();
         idPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -65,6 +72,10 @@ public class MedicineManagementForm extends JFrame {
         medStockPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         medStockPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 25));
 
+        searchLabel = new JLabel("Search");
+        searchLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        searchLabel.setPreferredSize(new Dimension(150, 25));
+
         idLabel = new JLabel("ID");
         idLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         idLabel.setPreferredSize(new Dimension(150, 25));
@@ -81,6 +92,9 @@ public class MedicineManagementForm extends JFrame {
         medStockLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         medStockLabel.setPreferredSize(new Dimension(150, 25));
 
+        searchTextField = new JTextField();
+        searchTextField.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+
         idTextField = new JTextField();
         idTextField.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
 
@@ -96,23 +110,29 @@ public class MedicineManagementForm extends JFrame {
         addButton = new JButton("Add");
         updateButton = new JButton("Update");
         deleteButton = new JButton("Delete");
-    }
-
-    private void initSearchPanel() {
-        searchPanel = new JPanel();
-        searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.PAGE_AXIS));
-
-        searchFieldLabel = new JLabel("Name");
-        searchFieldLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
-
-        searchField = new JTextField();
-        searchField.setColumns(40);
-
-        searchFormPanel = new JPanel();
-        searchFormPanel.setLayout(new GridLayout(2, 2, 4, 4));
-
         searchButton = new JButton("Search");
+
     }
+
+    /*
+     * private void initSearchPanel() {
+     * searchPanel = new JPanel();
+     * searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.PAGE_AXIS));
+     * 
+     * searchFieldLabel = new JLabel("Name");
+     * searchFieldLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+     * searchFieldLabel.setPreferredSize(new Dimension(150, 25));
+     * 
+     * searchField = new JTextField();
+     * searchField.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300,
+     * 25));
+     * 
+     * searchFormPanel = new JPanel();
+     * searchFormPanel.setLayout(new GridLayout(2, 2, 4, 4));
+     * 
+     * searchButton = new JButton("Search");
+     * }
+     */
 
     private void initItem() {
         setLayout(new BorderLayout());
@@ -147,6 +167,9 @@ public class MedicineManagementForm extends JFrame {
     }
 
     private void setFormPanel() {
+        searchPanel.add(searchLabel);
+        searchPanel.add(searchTextField);
+
         idPanel.add(idLabel);
         idPanel.add(idTextField);
 
@@ -159,6 +182,7 @@ public class MedicineManagementForm extends JFrame {
         medStockPanel.add(medStockLabel);
         medStockPanel.add(medStockTextField);
 
+        formPanel.add(searchPanel);
         formPanel.add(idPanel);
         formPanel.add(medNamePanel);
         formPanel.add(medPricePanel);
@@ -170,20 +194,23 @@ public class MedicineManagementForm extends JFrame {
         bottomPanel.add(addButton);
         bottomPanel.add(updateButton);
         bottomPanel.add(deleteButton);
-    }
-
-    private void setSearchPanel() {
-        searchFormPanel.add(searchFieldLabel);
-        searchFormPanel.add(searchField);
-
-        searchPanel.add(searchFormPanel);
-
-        centerPanel.add(searchPanel);
-
-        centerPanel.setBorder(new EmptyBorder(25, 25, 25, 25));
-
         bottomPanel.add(searchButton);
     }
+
+    /*
+     * private void setSearchPanel() {
+     * searchFormPanel.add(searchFieldLabel);
+     * searchFormPanel.add(searchField);
+     * 
+     * searchPanel.add(searchFormPanel);
+     * 
+     * centerPanel.add(searchPanel);
+     * 
+     * centerPanel.setBorder(new EmptyBorder(25, 25, 25, 25));
+     * 
+     * bottomPanel.add(searchButton);
+     * }
+     */
 
     private void setItem() {
         /* Top Panel */
@@ -201,15 +228,6 @@ public class MedicineManagementForm extends JFrame {
     }
 
     private void setListener() {
-
-        // searchButton.addActionListener(new ActionListener() {
-        //
-        // @Override
-        // public void actionPerformed(ActionEvent e) {
-        //
-        // }
-        // });
-
         addButton.addActionListener(new ActionListener() {
 
             @Override
@@ -249,6 +267,18 @@ public class MedicineManagementForm extends JFrame {
                 loadData();
             }
         });
+
+        searchButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchedName = searchTextField.getText();
+
+                MedicineController medController = MedicineController.getInstance();
+                List<Medicine> foundMedicine = medController.searchMedicine(searchedName);
+                loadData(foundMedicine);
+            }
+        });
     }
 
     private void loadData() {
@@ -258,6 +288,23 @@ public class MedicineManagementForm extends JFrame {
         List<Medicine> meds = MedicineController.getInstance().getAllMedicine();
 
         for (Medicine medicine : meds) {
+            row = new Vector<>();
+            row.add(Integer.toString(medicine.getMedicineID()));
+            row.add(medicine.getName());
+            row.add(Integer.toString(medicine.getPrice()));
+            row.add(Integer.toString(medicine.getStock()));
+            dtm.addRow(row);
+        }
+
+        table.setModel(dtm);
+    }
+
+    private void loadData(List<Medicine> foundMedicine) {
+        Object[] header = { "Medicine ID", "Medicine Name", "Medicine Price", "Medicine Stock" };
+
+        dtm = new DefaultTableModel(header, 0);
+
+        for (Medicine medicine : foundMedicine) {
             row = new Vector<>();
             row.add(Integer.toString(medicine.getMedicineID()));
             row.add(medicine.getName());
