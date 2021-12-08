@@ -7,99 +7,104 @@ import models.Medicine;
 
 public class MedicineController {
 
-	public MedicineController() {
-		// TODO Auto-generated constructor stub
+	private static MedicineController instance;
+
+	private MedicineController() {
+
 	}
 
-	public List<Medicine> GetAllMedicine(){
-		
+	public static MedicineController getInstance() {
+		if (MedicineController.instance == null) {
+			if (MedicineController.instance == null) {
+				MedicineController.instance = new MedicineController();
+			}
+		}
+
+		return MedicineController.instance;
+	}
+
+	public List<Medicine> getAllMedicine() {
+
 		Medicine medicine = new Medicine();
-		
-		List<Medicine> allMedicines = medicine.GetAllMedicine();
-		
+
+		List<Medicine> allMedicines = medicine.getAllMedicine();
+
 		return allMedicines;
 	}
-	
-	public Medicine AddMedicine(String name, int price, int stock) {
-		
-		//validation
-		
+
+	public Medicine addMedicine(String name, int price, int stock) {
+
+		// validation
+
 		Medicine medicine = new Medicine();
-		
+
 		medicine.setName(name);
 		medicine.setPrice(price);
 		medicine.setStock(stock);
-		medicine.InsertMedicine();
-		
+		medicine.insertMedicine();
+
 		return medicine;
 	}
-	
-	public Medicine UpdateMedicine(String name, int price, int stock) {
-		
-		//validation
-		
+
+	public Medicine updateMedicine(int id, String name, int price, int stock) {
+
+		// validation
 		Medicine medicine = new Medicine();
-		
+		medicine = medicine.getMedicine(id);
+
 		medicine.setName(name);
 		medicine.setPrice(price);
-		medicine.setStock(stock);
-		medicine.InsertMedicine();
-		
-		return medicine;
-	}
-	
-	public Medicine DeleteMedicine(int medicineID) {
-		
-		//validation
-		
-		Medicine medicine = new Medicine();
-		
-		medicine.GetMedicine(medicineID);
-		medicine.DeleteMedicine();
-		
-		return medicine;
-	}
-	
-	public List<Medicine> SearchMedicine(String name){
-		
-		//validation
-		
-		Medicine medicine = new Medicine();
-		
-		List<Medicine> allMedicines = medicine.SearchMedicine(name);
-		
-		return allMedicines;
-	}
-	
-	public Medicine GetMedicine(int medicineID) {
-		
-		//validation
-		
-		Medicine medicine = new Medicine();
-		
-		medicine.GetMedicine(medicineID);
-		
-		return medicine;
-	}
-	
-	public Medicine DecreaseStock(int medicineID, int stock) {
-		
-		//validation
-		
-		Medicine medicine = new Medicine();
-		
-		medicine.GetMedicine(medicineID);
 		medicine.setStock(stock);
 		medicine.updateMedicine();
-		
+
 		return medicine;
 	}
-	
 
-	
+	public Medicine deleteMedicine(int medicineID) {
 
-	
+		// validation
 
+		Medicine medicine = new Medicine();
 
-	
+		medicine = medicine.getMedicine(medicineID);
+		medicine.deleteMedicine();
+
+		return medicine;
+	}
+
+	public List<Medicine> searchMedicine(String name) {
+
+		// validation
+
+		Medicine medicine = new Medicine();
+
+		List<Medicine> allMedicines = medicine.searchMedicine(name);
+
+		return allMedicines;
+	}
+
+	public Medicine getMedicine(int medicineID) {
+
+		// validation
+
+		Medicine medicine = new Medicine();
+
+		medicine.getMedicine(medicineID);
+
+		return medicine;
+	}
+
+	public Medicine decreaseStock(int medicineID, int stock) {
+
+		// validation
+
+		Medicine medicine = new Medicine();
+
+		medicine.getMedicine(medicineID);
+		medicine.setStock(stock);
+		medicine.updateMedicine();
+
+		return medicine;
+	}
+
 }

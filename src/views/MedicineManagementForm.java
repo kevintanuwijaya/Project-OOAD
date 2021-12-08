@@ -26,9 +26,9 @@ public class MedicineManagementForm extends JFrame {
     private JPanel formPanel, searchPanel; // Panel untuk dimasukkan ke bottomPanel
 
     /* For Add Form Panel */
-    private JPanel medNamePanel, medPricePanel, medStockPanel; // Panel untuk 1 Form Panel
-    private JLabel medNameLabel, medPriceLabel, medStockLabel;
-    private JTextField medName, medPrice, medStock;
+    private JPanel idPanel, medNamePanel, medPricePanel, medStockPanel; // Panel untuk 1 Form Panel
+    private JLabel idLabel, medNameLabel, medPriceLabel, medStockLabel;
+    private JTextField idTextField, medNameTextField, medPriceTextField, medStockTextField;
     private JTable table;
     private DefaultTableModel dtm;
     private JScrollPane scrollTable;
@@ -49,6 +49,10 @@ public class MedicineManagementForm extends JFrame {
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 25));
 
+        idPanel = new JPanel();
+        idPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        idPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 25));
+
         medNamePanel = new JPanel();
         medNamePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         medNamePanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 25));
@@ -60,6 +64,10 @@ public class MedicineManagementForm extends JFrame {
         medStockPanel = new JPanel();
         medStockPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         medStockPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 25));
+
+        idLabel = new JLabel("ID");
+        idLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        idLabel.setPreferredSize(new Dimension(150, 25));
 
         medNameLabel = new JLabel("Name");
         medNameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
@@ -73,14 +81,17 @@ public class MedicineManagementForm extends JFrame {
         medStockLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         medStockLabel.setPreferredSize(new Dimension(150, 25));
 
-        medName = new JTextField();
-        medName.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+        idTextField = new JTextField();
+        idTextField.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
 
-        medPrice = new JTextField();
-        medPrice.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+        medNameTextField = new JTextField();
+        medNameTextField.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
 
-        medStock = new JTextField();
-        medStock.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+        medPriceTextField = new JTextField();
+        medPriceTextField.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+
+        medStockTextField = new JTextField();
+        medStockTextField.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
 
         addButton = new JButton("Add");
         updateButton = new JButton("Update");
@@ -135,16 +146,20 @@ public class MedicineManagementForm extends JFrame {
         bottomPanel = new JPanel();
     }
 
-    private void setAddFormPanel() {
+    private void setFormPanel() {
+        idPanel.add(idLabel);
+        idPanel.add(idTextField);
+
         medNamePanel.add(medNameLabel);
-        medNamePanel.add(medName);
+        medNamePanel.add(medNameTextField);
 
         medPricePanel.add(medPriceLabel);
-        medPricePanel.add(medPrice);
+        medPricePanel.add(medPriceTextField);
 
         medStockPanel.add(medStockLabel);
-        medStockPanel.add(medStock);
+        medStockPanel.add(medStockTextField);
 
+        formPanel.add(idPanel);
         formPanel.add(medNamePanel);
         formPanel.add(medPricePanel);
         formPanel.add(medStockPanel);
@@ -177,7 +192,7 @@ public class MedicineManagementForm extends JFrame {
         /* Center Panel */
         centerPanel.add(scrollTable);
 
-        setAddFormPanel();
+        setFormPanel();
         // setSearchPanel();
 
         add(topPanel, BorderLayout.NORTH);
@@ -199,13 +214,38 @@ public class MedicineManagementForm extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("CLICK");
-                String name = medName.getText();
-                int price = Integer.parseInt(medPrice.getText());
-                int stock = Integer.parseInt(medStock.getText());
+                String name = medNameTextField.getText();
+                int price = Integer.parseInt(medPriceTextField.getText());
+                int stock = Integer.parseInt(medStockTextField.getText());
 
                 MedicineController medController = MedicineController.getInstance();
-                medController.AddMedicine(name, price, stock);
+                medController.addMedicine(name, price, stock);
+                loadData();
+            }
+        });
+
+        updateButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int id = Integer.parseInt(idTextField.getText());
+                String name = medNameTextField.getText();
+                int price = Integer.parseInt(medPriceTextField.getText());
+                int stock = Integer.parseInt(medStockTextField.getText());
+
+                MedicineController medController = MedicineController.getInstance();
+                medController.updateMedicine(id, name, price, stock);
+                loadData();
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int id = Integer.parseInt(idTextField.getText());
+
+                MedicineController medController = MedicineController.getInstance();
+                medController.deleteMedicine(id);
                 loadData();
             }
         });
@@ -215,7 +255,7 @@ public class MedicineManagementForm extends JFrame {
         Object[] header = { "Medicine ID", "Medicine Name", "Medicine Price", "Medicine Stock" };
 
         dtm = new DefaultTableModel(header, 0);
-        List<Medicine> meds = MedicineController.getInstance().GetAllMedicine();
+        List<Medicine> meds = MedicineController.getInstance().getAllMedicine();
 
         for (Medicine medicine : meds) {
             row = new Vector<>();
