@@ -42,13 +42,8 @@ public class DatabaseConnection {
 
         String sqlQuery = "SELECT * FROM medicine";
 
-        // Statement -> Object yang dipake buat execute
-        // static SQL statement
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-
-            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-            // stat.executeQuery() -> return table dalam bentuk ResultSet
 
             ResultSet result = stat.executeQuery(sqlQuery);
 
@@ -74,16 +69,11 @@ public class DatabaseConnection {
         int stock = medicine.getStock();
         String sqlQuery = "INSERT INTO medicine(Name, Price, Stock) VALUES(?, ?, ?);";
 
-        // Statement -> Object yang dipake buat execute
-        // static SQL statement
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
             stat.setString(1, name);
             stat.setInt(2, price);
             stat.setInt(3, stock);
-
-            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-            // stat.executeQuery() -> return table dalam bentuk ResultSet
 
             int result = stat.executeUpdate();
 
@@ -105,17 +95,12 @@ public class DatabaseConnection {
 
         String sqlQuery = "UPDATE medicine SET Name = ?, Price = ?, Stock = ? WHERE MedicineId = ?;";
 
-        // Statement -> Object yang dipake buat execute
-        // static SQL statement
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
             stat.setString(1, name);
             stat.setInt(2, price);
             stat.setInt(3, stock);
             stat.setInt(4, id);
-
-            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-            // stat.executeQuery() -> return table dalam bentuk ResultSet
 
             int result = stat.executeUpdate();
 
@@ -134,14 +119,9 @@ public class DatabaseConnection {
 
         String sqlQuery = "DELETE FROM medicine WHERE MedicineId = ?;";
 
-        // Statement -> Object yang dipake buat execute
-        // static SQL statement
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
             stat.setInt(1, id);
-
-            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-            // stat.executeQuery() -> return table dalam bentuk ResultSet
 
             int result = stat.executeUpdate();
 
@@ -158,16 +138,10 @@ public class DatabaseConnection {
     public Vector<Medicine> searchMedicine(String name) {
         Vector<Medicine> foundMedicine = new Vector<>();
 
-        String sqlQuery = "SELECT * FROM medicine WHERE name LIKE '%?%';";
+        String sqlQuery = "SELECT * FROM medicine WHERE Name LIKE '%" + name + "%';";
 
-        // Statement -> Object yang dipake buat execute
-        // static SQL statement
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setString(1, name);
-
-            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-            // stat.executeQuery() -> return table dalam bentuk ResultSet
 
             ResultSet result = stat.executeQuery(sqlQuery);
 
@@ -187,20 +161,14 @@ public class DatabaseConnection {
 
         return foundMedicine;
     }
-    
-    
+
     public Vector<Bill> getAllBill() {
         Vector<Bill> bill = new Vector<>();
 
         String sqlQuery = "SELECT * FROM bill";
 
-        // Statement -> Object yang dipake buat execute
-        // static SQL statement
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-
-            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-            // stat.executeQuery() -> return table dalam bentuk ResultSet
 
             ResultSet result = stat.executeQuery(sqlQuery);
 
@@ -221,7 +189,7 @@ public class DatabaseConnection {
 
         return bill;
     }
-    
+
     public Boolean insertBill(Bill bill) {
         int employeeID = bill.getEmployeeID();
         int patientID = bill.getPatientID();
@@ -229,17 +197,12 @@ public class DatabaseConnection {
         String paymentType = bill.getPaymentType();
         String sqlQuery = "INSERT INTO bill(EmployeeID, PatientID, DateTimeCreated, PaymentType) VALUES(?, ?, ?);";
 
-        // Statement -> Object yang dipake buat execute
-        // static SQL statement
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setInt(1,  employeeID);
+            stat.setInt(1, employeeID);
             stat.setInt(2, patientID);
             stat.setDate(3, dateTimeCreated);
             stat.setString(4, paymentType);
-
-            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-            // stat.executeQuery() -> return table dalam bentuk ResultSet
 
             int result = stat.executeUpdate();
 
@@ -254,24 +217,19 @@ public class DatabaseConnection {
     }
 
     public Boolean updateBill(Bill bill) {
-    	int employeeID = bill.getEmployeeID();
+        int employeeID = bill.getEmployeeID();
         int patientID = bill.getPatientID();
         Date dateTimeCreated = bill.getDateTimeCreated();
         String paymentType = bill.getPaymentType();
 
         String sqlQuery = "UPDATE bill SET EmployeeID = ?, PatientID = ?, DateTimeCreated = ?, PaymentType = ? WHERE BillID = ?;";
 
-        // Statement -> Object yang dipake buat execute
-        // static SQL statement
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setInt(1,  employeeID);
+            stat.setInt(1, employeeID);
             stat.setInt(2, patientID);
             stat.setDate(3, dateTimeCreated);
             stat.setString(4, paymentType);
-
-            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-            // stat.executeQuery() -> return table dalam bentuk ResultSet
 
             int result = stat.executeUpdate();
 
@@ -290,14 +248,9 @@ public class DatabaseConnection {
 
         String sqlQuery = "DELETE FROM bill WHERE BillID = ?;";
 
-        // Statement -> Object yang dipake buat execute
-        // static SQL statement
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
             stat.setInt(1, id);
-
-            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-            // stat.executeQuery() -> return table dalam bentuk ResultSet
 
             int result = stat.executeUpdate();
 
@@ -310,68 +263,68 @@ public class DatabaseConnection {
 
         return false;
     }
-    
-//    public Boolean insertBillDetail(BillDetail billDetail) {
-//        int billDetailID = billDetail.getBillDetailID();
-//        int patientID = billDetail.getPatientID();
-//        Date dateTimeCreated = billDetail.getDateTimeCreated();
-//        String paymentType = billDetail.getPaymentType();
-//        String sqlQuery = "INSERT INTO bill(EmployeeID, PatientID, DateTimeCreated, PaymentType) VALUES(?, ?, ?);";
-//
-//        // Statement -> Object yang dipake buat execute
-//        // static SQL statement
-//        try {
-//            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-//            stat.setInt(1,  employeeID);
-//            stat.setInt(2, patientID);
-//            stat.setDate(3, dateTimeCreated);
-//            stat.setString(4, paymentType);
-//
-//            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-//            // stat.executeQuery() -> return table dalam bentuk ResultSet
-//
-//            int result = stat.executeUpdate();
-//
-//            if (result != -1)
-//                return true;
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return false;
-//    }
-    
+
+    // public Boolean insertBillDetail(BillDetail billDetail) {
+    // int billDetailID = billDetail.getBillDetailID();
+    // int patientID = billDetail.getPatientID();
+    // Date dateTimeCreated = billDetail.getDateTimeCreated();
+    // String paymentType = billDetail.getPaymentType();
+    // String sqlQuery = "INSERT INTO bill(EmployeeID, PatientID, DateTimeCreated,
+    // PaymentType) VALUES(?, ?, ?);";
+    //
+    // // Statement -> Object yang dipake buat execute
+    // // static SQL statement
+    // try {
+    // PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+    // stat.setInt(1, employeeID);
+    // stat.setInt(2, patientID);
+    // stat.setDate(3, dateTimeCreated);
+    // stat.setString(4, paymentType);
+    //
+    // // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
+    // // stat.executeQuery() -> return table dalam bentuk ResultSet
+    //
+    // int result = stat.executeUpdate();
+    //
+    // if (result != -1)
+    // return true;
+    //
+    // } catch (SQLException e) {
+    // e.printStackTrace();
+    // }
+    //
+    // return false;
+    // }
+
     public Employee getEmployee(String username, String password) {
-    	
-    	String sqlQuery = "SELECT * FROM employee where Username = ? AND Password = ?";
-    	
-    	try {
-			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-			stat.setString(1, username);
-			stat.setString(2, password);
-			
-			ResultSet rs = stat.executeQuery();
-			
-			if(rs.next()) {
-				
-				Employee employee = new Employee();
-				employee.setEmployeeID(rs.getInt("EmployeeID"));
-				employee.setRoleID(rs.getInt("RoleID"));
-				employee.setName(rs.getString("Name"));
-				employee.setUsername(rs.getString("Username"));
-				employee.setPassword(rs.getString("Password"));
-				employee.setSalary(rs.getInt("Salary"));
-				employee.setStatus(rs.getNString("Status"));
-				
-				return employee;
-			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    	return null;
+
+        String sqlQuery = "SELECT * FROM employee where Username = ? AND Password = ?";
+
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setString(1, username);
+            stat.setString(2, password);
+
+            ResultSet rs = stat.executeQuery();
+
+            if (rs.next()) {
+
+                Employee employee = new Employee();
+                employee.setEmployeeID(rs.getInt("EmployeeID"));
+                employee.setRoleID(rs.getInt("RoleID"));
+                employee.setName(rs.getString("Name"));
+                employee.setUsername(rs.getString("Username"));
+                employee.setPassword(rs.getString("Password"));
+                employee.setSalary(rs.getInt("Salary"));
+                employee.setStatus(rs.getNString("Status"));
+
+                return employee;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
