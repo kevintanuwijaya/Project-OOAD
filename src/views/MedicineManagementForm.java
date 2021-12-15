@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controllers.MedicineController;
+import models.Employee;
 import models.Medicine;
 
 import java.awt.*;
@@ -32,7 +33,7 @@ public class MedicineManagementForm extends JFrame {
     private JTable table;
     private DefaultTableModel dtm;
     private JScrollPane scrollTable;
-    private JButton addButton, updateButton, deleteButton;
+    private JButton addButton, updateButton, deleteButton,backButton;
 
     /* For Search Form Panel */
     private JPanel searchFormPanel; // Panel untuk 1 Search Form Panel
@@ -43,6 +44,8 @@ public class MedicineManagementForm extends JFrame {
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     private Vector<String> row;
+    
+    private Employee currentEmployee = MainMenu.currentEmployee;
 
     private void initFormPanel() {
         formPanel = new JPanel();
@@ -111,6 +114,7 @@ public class MedicineManagementForm extends JFrame {
         updateButton = new JButton("Update");
         deleteButton = new JButton("Delete");
         searchButton = new JButton("Search");
+        backButton = new JButton("Back");
 
     }
 
@@ -169,32 +173,38 @@ public class MedicineManagementForm extends JFrame {
     private void setFormPanel() {
         searchPanel.add(searchLabel);
         searchPanel.add(searchTextField);
-
-        idPanel.add(idLabel);
-        idPanel.add(idTextField);
-
-        medNamePanel.add(medNameLabel);
-        medNamePanel.add(medNameTextField);
-
-        medPricePanel.add(medPriceLabel);
-        medPricePanel.add(medPriceTextField);
-
-        medStockPanel.add(medStockLabel);
-        medStockPanel.add(medStockTextField);
-
+        
         formPanel.add(searchPanel);
-        formPanel.add(idPanel);
-        formPanel.add(medNamePanel);
-        formPanel.add(medPricePanel);
-        formPanel.add(medStockPanel);
+        bottomPanel.add(searchButton);
+        bottomPanel.add(backButton);
+        
+        if(currentEmployee.getRoleID() == 2) {
+        	idPanel.add(idLabel);
+            idPanel.add(idTextField);
+
+            medNamePanel.add(medNameLabel);
+            medNamePanel.add(medNameTextField);
+
+            medPricePanel.add(medPriceLabel);
+            medPricePanel.add(medPriceTextField);
+
+            medStockPanel.add(medStockLabel);
+            medStockPanel.add(medStockTextField);
+            
+            formPanel.add(idPanel);
+            formPanel.add(medNamePanel);
+            formPanel.add(medPricePanel);
+            formPanel.add(medStockPanel);
+            
+            bottomPanel.add(addButton);
+            bottomPanel.add(updateButton);
+            bottomPanel.add(deleteButton);
+        }
+
         formPanel.setBorder(new EmptyBorder(25, 25, 25, 25));
 
         centerPanel.add(formPanel);
 
-        bottomPanel.add(addButton);
-        bottomPanel.add(updateButton);
-        bottomPanel.add(deleteButton);
-        bottomPanel.add(searchButton);
     }
 
     /*
@@ -279,6 +289,15 @@ public class MedicineManagementForm extends JFrame {
                 loadData(foundMedicine);
             }
         });
+        
+        backButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new MainMenu(currentEmployee);
+				dispose();
+			}
+		});
     }
 
     private void loadData() {
