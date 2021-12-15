@@ -3,6 +3,8 @@ package models;
 import java.util.List;
 import java.util.Vector;
 
+import utils.DatabaseConnection;
+
 public class Employee {
 	
 	private int EmployeeID; 
@@ -106,6 +108,12 @@ public class Employee {
 		//get all doctors from database
 		
 		return allDoctors;
+	}
+	
+	public Employee getEmployee(String username, String password) {
+		
+		return DatabaseConnection.getInstance().getEmployee(username, password);
+		
 	}
 	
 	

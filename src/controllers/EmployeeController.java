@@ -1,12 +1,22 @@
 package controllers;
 
 import java.util.List;
-import java.util.Vector;
 
 import models.Employee;
 
 public class EmployeeController {
+	
+	private static EmployeeController instance = null;
 
+	public static EmployeeController getInstance() {
+		if(instance == null) {
+			instance = new EmployeeController();
+		}
+		return instance;
+	}
+	
+	private EmployeeController() {}
+	
 	public List<Employee> GetDoctorList(){
 		
 		Employee employee = new Employee();
@@ -65,6 +75,15 @@ public class EmployeeController {
 		employee.GetEmployee(employeeID);
 		employee.setStatus("Retired");
 		employee.UpdateEmployee();
+		
+		return employee;
+	}
+	
+	public Employee loginEmployee(String username, String password) {
+		
+		Employee model = new Employee();
+		
+		Employee employee = model.getEmployee(username, password);
 		
 		return employee;
 	}

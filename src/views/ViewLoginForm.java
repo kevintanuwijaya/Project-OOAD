@@ -7,20 +7,28 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import controllers.EmployeeController;
+import models.Employee;
+
 public class ViewLoginForm extends JFrame{
 	private JPanel topPanel, formPanel, bottomPanel, usernamePanel, passwordPanel;
 	private JLabel title, usernameLabel, passwordLabel;
-	private JTextField empUsername, empPassword;
+	private JTextField empUsername;
+	private JPasswordField empPassword;
 	private DefaultTableModel dtm;
 	private JButton loginButton;
 
@@ -48,7 +56,7 @@ public class ViewLoginForm extends JFrame{
         
         empUsername = new JTextField();
         empUsername.setPreferredSize(new Dimension((int)screenSize.getWidth()-400,25));
-        empPassword = new JTextField();
+        empPassword = new JPasswordField();
         empPassword.setPreferredSize(new Dimension((int)screenSize.getWidth()-400,25));
         
         usernamePanel = new JPanel();
@@ -86,6 +94,27 @@ public class ViewLoginForm extends JFrame{
 	}
 	
 	private void setListener() {
+		
+		loginButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String username = empUsername.getText();
+				String password = String.valueOf(empPassword.getPassword());
+				
+				Employee employee = EmployeeController.getInstance().loginEmployee(username, password);
+				
+				if(employee!=null) {
+					new MainMenu(employee);
+					dispose();
+				}else {
+					JOptionPane.showMessageDialog(null, "User not Found", "Error",JOptionPane.ERROR_MESSAGE);
+				}
+				
+				
+				
+			}
+		});
 		
 	}
 	
