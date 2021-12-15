@@ -79,6 +79,7 @@ public class Medicine {
 	public List<Medicine> searchMedicine(String name) {
 
 		List<Medicine> allMedicines = new Vector<Medicine>();
+		allMedicines = DatabaseConnection.getInstance().searchMedicine(name);
 
 		// get all medicine by name from database
 
