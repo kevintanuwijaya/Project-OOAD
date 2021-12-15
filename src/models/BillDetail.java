@@ -3,6 +3,8 @@ package models;
 import java.util.List;
 import java.util.Vector;
 
+import utils.DatabaseConnection;
+
 public class BillDetail {
 
 	private int BillDetailID;
@@ -49,7 +51,7 @@ public class BillDetail {
 	
 	public BillDetail AddBillDetail() {
 		
-		//add this billdetail to database
+		DatabaseConnection.getInstance().AddBillDetail(this);
 		
 		return this;
 	}

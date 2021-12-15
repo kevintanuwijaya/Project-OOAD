@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Vector;
 
+import utils.DatabaseConnection;
+
 public class Bill {
 
 	private int BillID;
@@ -69,7 +71,7 @@ public class Bill {
 		
 		List<Bill> allBills = new Vector<Bill>();
 		
-		//get all bills from database
+		allBills = DatabaseConnection.getInstance().getAllBill();
 		
 		return allBills;
 	}
@@ -82,7 +84,22 @@ public class Bill {
 		return this;
 	}
 	
+	public Bill GetBill(int billID) {
+		Bill bill = new Bill();
+		List<Bill> allBill = bill.GetAllBill();
+
+		for (Bill bil : allBill) {
+			if (bil.getBillID() == billID) {
+				return bil;
+			}
+		}
+
+		return bill;
+	}
+	
 	public Bill AddBill() {
+		
+		DatabaseConnection.getInstance().insertBill(this);
 		
 		//add this Bill to database
 		
@@ -90,6 +107,8 @@ public class Bill {
 	}
 	
 	public Bill UpdateBill() {
+		
+		DatabaseConnection.getInstance().updateBill(this);
 		
 		//update this Bill in database
 		
