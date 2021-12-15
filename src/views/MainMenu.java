@@ -89,5 +89,5 @@ public class MainMenu extends JFrame {
 		setLocationRelativeTo(null);
 		setTitle("Main Menu");
 	}
-
+ 
 }
