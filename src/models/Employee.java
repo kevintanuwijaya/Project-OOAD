@@ -62,6 +62,12 @@ public class Employee {
 		Status = status;
 	}
 	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return Name;
+	}
+	
 	public List<Employee> GetAllEmployee(){
 		
 		List<Employee> allEmployees = new Vector<Employee>();

@@ -149,4 +149,37 @@ public class DatabaseConnection {
 
         return false;
     }
+
+    public Vector<Medicine> searchMedicine(String name) {
+        Vector<Medicine> foundMedicine = new Vector<>();
+
+        String sqlQuery = "SELECT * FROM medicine WHERE name LIKE '%?%';";
+
+        // Statement -> Object yang dipake buat execute
+        // static SQL statement
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setString(1, name);
+
+            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
+            // stat.executeQuery() -> return table dalam bentuk ResultSet
+
+            ResultSet result = stat.executeQuery(sqlQuery);
+
+            while (result.next()) {
+                Medicine med = new Medicine();
+                med.setMedicineID(result.getInt("MedicineId"));
+                med.setName(result.getString("Name"));
+                med.setPrice(result.getInt("Price"));
+                med.setStock(result.getInt("Stock"));
+
+                foundMedicine.add(med);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return foundMedicine;
+    }
 }
