@@ -227,7 +227,7 @@ public class DatabaseConnection {
         int patientID = bill.getPatientID();
         Date dateTimeCreated = bill.getDateTimeCreated();
         String paymentType = bill.getPaymentType();
-        String sqlQuery = "INSERT INTO bill(EmployeeID, PatientID, DateTimeCreated, PaymentType) VALUES(?, ?, ?);";
+        String sqlQuery = "INSERT INTO bill(EmployeeID, PatientID, DateTimeCreated, PaymentType) VALUES(?, ?, ?, ?);";
 
         // Statement -> Object yang dipake buat execute
         // static SQL statement
@@ -311,36 +311,36 @@ public class DatabaseConnection {
         return false;
     }
     
-//    public Boolean insertBillDetail(BillDetail billDetail) {
-//        int billDetailID = billDetail.getBillDetailID();
-//        int patientID = billDetail.getPatientID();
-//        Date dateTimeCreated = billDetail.getDateTimeCreated();
-//        String paymentType = billDetail.getPaymentType();
-//        String sqlQuery = "INSERT INTO bill(EmployeeID, PatientID, DateTimeCreated, PaymentType) VALUES(?, ?, ?);";
-//
-//        // Statement -> Object yang dipake buat execute
-//        // static SQL statement
-//        try {
-//            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-//            stat.setInt(1,  employeeID);
-//            stat.setInt(2, patientID);
-//            stat.setDate(3, dateTimeCreated);
-//            stat.setString(4, paymentType);
-//
-//            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-//            // stat.executeQuery() -> return table dalam bentuk ResultSet
-//
-//            int result = stat.executeUpdate();
-//
-//            if (result != -1)
-//                return true;
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return false;
-//    }
+    public Boolean AddBillDetail(BillDetail billDetail) {
+        int billDetailID = billDetail.getBillDetailID();
+        int billID = billDetail.getBillID();
+        int medicineID = billDetail.getMedicineID();
+        int quantity = billDetail.getQuantity();
+        String sqlQuery = "INSERT INTO billdetail(BillDetailID, BillID, MedicineID, Quantity) VALUES(?, ?, ?, ?);";
+
+        // Statement -> Object yang dipake buat execute
+        // static SQL statement
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setInt(1,  billDetailID);
+            stat.setInt(2, billID);
+            stat.setInt(3, medicineID);
+            stat.setInt(4, quantity);
+
+            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
+            // stat.executeQuery() -> return table dalam bentuk ResultSet
+
+            int result = stat.executeUpdate();
+
+            if (result != -1)
+                return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
     
     public Employee getEmployee(String username, String password) {
     	
