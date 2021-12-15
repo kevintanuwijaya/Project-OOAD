@@ -1,11 +1,11 @@
 package programs;
 
-import views.DoctorViews;
+import views.ViewEmployeeForm;
 
 public class main {
 
 	public main() {
-		new DoctorViews();
+		new ViewEmployeeForm();
 	}
 
 	public static void main(String[] args) {

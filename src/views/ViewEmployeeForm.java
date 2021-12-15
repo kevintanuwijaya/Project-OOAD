@@ -1,9 +1,13 @@
 package views;
 
+import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -19,19 +23,35 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import controllers.EmployeeController;
+import models.Employee;
+
 public class ViewEmployeeForm extends JFrame{
-	private JPanel topPanel, centerPanel, bottomPanel, usernamePanel, namePanel, passwordPanel, rolePanel, salaryPanel, statusPanel, formPanel;
-    private JLabel title, usernameLabel, nameLabel, passwordLabel, roleLabel, salaryLabel, statusLabel;
-    private JTextField empUsername, empName, empPassword, empRole, empSalary, empStatus;
+	private JPanel idPanel, searchPanel, topPanel, centerPanel, bottomPanel, usernamePanel, namePanel, passwordPanel, rolePanel, salaryPanel, statusPanel, formPanel;
+    private JLabel idLabel, title, usernameLabel, nameLabel, passwordLabel, roleLabel, salaryLabel, statusLabel;
+    private JTextField empId, empUsername, empName, empPassword, empRole, empSalary, empStatus;
     private JTable table;
     private DefaultTableModel dtm;
     private JScrollPane scrollPane;
-    private JButton addButton;
+    private JButton addButton, updateButton, deleteButton;
+
+    ButtonGroup roleRB;
+    private JRadioButton adminRb,pharmacistRb,doctorRb,nurseRb,humanResourceRb; 
+
+    /* For Search Form Panel */
+    // private JPanel searchFormPanel; // Panel untuk 1 Search Form Panel
+    // private JLabel searchLabel;
+    // private JTextField searchTextField;
+    // private JButton searchButton;
+
+    private Vector<String> row;
 
     private Vector<String> columnName;
     private Vector<String> dataDummy;
     
     private JPanel rolesPanel;
+
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     private void initItem() {
         setLayout(new BorderLayout());
@@ -48,15 +68,16 @@ public class ViewEmployeeForm extends JFrame{
 
         // TODO Buat inital table
         columnName = new Vector<>();
-//        columnName.add("Medicine ID");
+       columnName.add("Employee ID");
         columnName.add("Employee Name");
         columnName.add("Employee Salary");
-        columnName.add("Employee Status");
+        columnName.add("Employee Role");
 
         System.out.println(columnName);
 
         // TODO Data dummy, nanti harus diganti pake data yang diambil dari data access
         dataDummy = new Vector<>();
+        dataDummy.add("1");
         dataDummy.add("Steven Santoso Suntialto");
         dataDummy.add("2MiliarJuta");
         dataDummy.add("Single?");
@@ -77,6 +98,9 @@ public class ViewEmployeeForm extends JFrame{
         formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.PAGE_AXIS));
 
+        idLabel = new JLabel("ID");
+        idLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        idLabel.setPreferredSize(new Dimension(50, 25));
         usernameLabel = new JLabel("Username");
         usernameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         nameLabel = new JLabel("Name");
@@ -90,6 +114,9 @@ public class ViewEmployeeForm extends JFrame{
         statusLabel = new JLabel("Status");
         statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 
+        empId = new JTextField();
+        empId.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+
         empUsername = new JTextField();
         empUsername.setColumns(40);
         empName = new JTextField();
@@ -102,6 +129,21 @@ public class ViewEmployeeForm extends JFrame{
         empSalary.setColumns(40);
         empStatus = new JTextField();
         empStatus.setColumns(40);
+
+        
+
+        // searchPanel = new JPanel();
+        // searchPanel.setLayout(new GridLayout(2, 2, 4, 4));
+
+        // searchLabel = new JLabel("Search");
+        // searchLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        // searchLabel.setPreferredSize(new Dimension(150, 25));
+
+        // searchTextField = new JTextField();
+        // searchTextField.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+
+        idPanel = new JPanel();
+        idPanel.setLayout(new GridLayout(2, 2, 4, 4));
 
         usernamePanel = new JPanel();
         usernamePanel.setLayout(new GridLayout(2, 2, 4, 4));
@@ -117,17 +159,17 @@ public class ViewEmployeeForm extends JFrame{
         statusPanel.setLayout(new GridLayout(2, 2, 4, 4));
         
         rolesPanel = new JPanel(new GridLayout(1,5));
-		ButtonGroup roleRB = new ButtonGroup();
+		roleRB = new ButtonGroup();
 	
-		JRadioButton adminRb = new JRadioButton("Administrative");
+		adminRb = new JRadioButton("Administrative");
 		rolesPanel.add(adminRb);
-		JRadioButton pharmacistRb = new JRadioButton("Pharmacist");
+		pharmacistRb = new JRadioButton("Pharmacist");
 		rolesPanel.add(pharmacistRb);
-		JRadioButton doctorRb = new JRadioButton("Doctor");
+		doctorRb = new JRadioButton("Doctor");
 		rolesPanel.add(doctorRb);
-		JRadioButton nurseRb = new JRadioButton("Nurse");
+		nurseRb = new JRadioButton("Nurse");
 		rolesPanel.add(nurseRb);
-		JRadioButton humanResourceRb = new JRadioButton("Human Resource");
+		humanResourceRb = new JRadioButton("Human Resource");
 		rolesPanel.add(humanResourceRb);
 		
 		roleRB.add(adminRb);
@@ -141,6 +183,9 @@ public class ViewEmployeeForm extends JFrame{
         bottomPanel = new JPanel();
 
         addButton = new JButton("Add");
+        updateButton = new JButton("Update");
+        deleteButton = new JButton("Delete");
+        // searchButton = new JButton("Search");
     }
 
     private void setItem() {
@@ -148,6 +193,12 @@ public class ViewEmployeeForm extends JFrame{
     	topPanel.add(title);
     	
         /* Center Panel */
+        // searchPanel.add(searchLabel);
+        // searchPanel.add(searchTextField);
+
+        idPanel.add(idLabel);
+        idPanel.add(empId);
+
         usernamePanel.add(usernameLabel);
         usernamePanel.add(empUsername);
 
@@ -167,6 +218,8 @@ public class ViewEmployeeForm extends JFrame{
         statusPanel.add(statusLabel);
         statusPanel.add(empStatus);
 
+        // formPanel.add(searchPanel);
+        formPanel.add(idPanel);
         formPanel.add(usernamePanel);
         formPanel.add(namePanel);
         formPanel.add(passwordPanel);
@@ -181,6 +234,9 @@ public class ViewEmployeeForm extends JFrame{
 
         /* Bottom Panel */
         bottomPanel.add(addButton);
+        bottomPanel.add(updateButton);
+        bottomPanel.add(deleteButton);
+        // bottomPanel.add(searchButton);
 
         add(topPanel, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
@@ -188,14 +244,120 @@ public class ViewEmployeeForm extends JFrame{
     }
 
     private void setListener() {
+        addButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                // int employeeID = Integer.parseInt(empId.getText());
+                String username = empUsername.getText();
+                String name = empName.getText();
+                // String password = empPassword.getText();
+                int roleID = 0;
+                int salary = Integer.parseInt(empSalary.getText());
+                // String status = empStatus.getText();
+
+                if (adminRb.isSelected()){
+                    roleID = 1;
+                }else if (pharmacistRb.isSelected()){
+                    roleID = 2;
+                }else if (doctorRb.isSelected()){
+                    roleID = 3;
+                }else if (nurseRb.isSelected()){
+                    roleID = 4;
+                }else if (humanResourceRb.isSelected()){
+                    roleID = 5;
+                }
+
+                EmployeeController empController = EmployeeController.getInstance();
+                empController.AddEmployee(name, username, roleID, salary);
+                loadData();
+            }
+            
+        });
+
+        updateButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                int employeeID = Integer.parseInt(empId.getText());
+                String username = empUsername.getText();
+                // String name = empName.getText();
+                String password = empPassword.getText();
+                // int roleID = 0;
+                int salary = Integer.parseInt(empSalary.getText());
+                // String status = empStatus.getText();
+
+                // if (adminRb.isSelected()){
+                //     roleID = 1;
+                // }else if (pharmacistRb.isSelected()){
+                //     roleID = 2;
+                // }else if (doctorRb.isSelected()){
+                //     roleID = 3;
+                // }else if (nurseRb.isSelected()){
+                //     roleID = 4;
+                // }else if (humanResourceRb.isSelected()){
+                //     roleID = 5;
+                // }
+                EmployeeController empController = EmployeeController.getInstance();
+                empController.UpdateEmployee(employeeID, username, password, salary);
+                loadData();
+            }
+            
+        });
+
+        deleteButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                int employeeID = Integer.parseInt(empId.getText());
+
+                EmployeeController empController = EmployeeController.getInstance();
+                empController.FireEmployee(employeeID);
+                loadData();
+            }
+            
+        });
     }
 
     private void loadData() {
-        dtm = new DefaultTableModel(columnName, 0);
-        dtm.addRow(dataDummy);
+        Object[] header = {"Employee Id", "Employee Name", "Employee Salary", "Employee Role"};
+
+        dtm = new DefaultTableModel(header, 0);
+        List<Employee> emps = EmployeeController.getInstance().GetAllEmployee();
+
+        for (Employee employee : emps){
+            row = new Vector<>();
+            row.add(Integer.toString(employee.getEmployeeID()));
+            row.add(employee.getName());
+            row.add(Integer.toString(employee.getSalary()));
+            row.add(Integer.toString(employee.getRoleID()));
+            dtm.addRow(row);
+        }
+        // dtm.addRow(dataDummy);
 
         table.setModel(dtm);
     }
+
+    // private void loadData() {
+    //     Object[] header = { "Medicine ID", "Medicine Name", "Medicine Price", "Medicine Stock" };
+
+    //     dtm = new DefaultTableModel(header, 0);
+    //     List<Medicine> meds = MedicineController.getInstance().getAllMedicine();
+
+    //     for (Medicine medicine : meds) {
+    //         row = new Vector<>();
+    //         row.add(Integer.toString(medicine.getMedicineID()));
+    //         row.add(medicine.getName());
+    //         row.add(Integer.toString(medicine.getPrice()));
+    //         row.add(Integer.toString(medicine.getStock()));
+    //         dtm.addRow(row);
+    //     }
+
+    //     table.setModel(dtm);
+    // }
 
 	public ViewEmployeeForm() {
 		// TODO Auto-generated constructor stub
