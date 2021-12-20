@@ -70,45 +70,54 @@ public class Employee {
 		return Name;
 	}
 	
-	public List<Employee> GetAllEmployee(){
-		
-		List<Employee> allEmployees = new Vector<Employee>();
-		
-		//get all employees from database
-		
-		return allEmployees;
-	}
 	
+	
+	// public Employee GetEmployee(int employeeID) {
+		
+	// 	//get employee data by employeeID
+	// 	//set all employee attributes from database to this class
+	// 	Employee employee = 
+		
+	// 	return this;
+	// }
 	public Employee GetEmployee(int employeeID) {
-		
-		//get employee data by employeeID
-		//set all employee attributes from database to this class
-		
-		return this;
-	}
+
+        // get employee data by employeeID
+        // set all employee attributes from database to this class
+        Employee employee = new Employee();
+        List<Employee> allEmployee = employee.GetAllEmployee();
+
+        for (Employee emp : allEmployee) {
+            if (emp.getEmployeeID() == employeeID) {
+                return emp;
+            }
+        }
+
+        return employee;
+    }
 	
 	public Employee InsertEmployee() {
 		
-		//add this employee to database
+		DatabaseConnection.getInstance().insertEmployee(this);
 		
 		return this;
 	}
 	
 	public Employee UpdateEmployee() {
 		
-		//update this employee from database
+		DatabaseConnection.getInstance().updateEmployee(this);
+		
+		return this;
+	}
+
+	public Employee FireEmployee() {
+		
+		DatabaseConnection.getInstance().fireEmployee(this);
 		
 		return this;
 	}
 	
-	public List<Employee> GetDoctorList(){
-		
-		List<Employee> allDoctors = new Vector<Employee>();
-		
-		//get all doctors from database
-		
-		return allDoctors;
-	}
+	
 	
 	public Employee getEmployee(String username, String password) {
 		
@@ -116,7 +125,15 @@ public class Employee {
 		
 	}
 	
-	
-	
+	public List<Employee> GetAllEmployee(){
+
+        return DatabaseConnection.getInstance().getAllEmployee();
+
+    }
+	public List<Employee> GetDoctorList(){
+
+        return DatabaseConnection.getInstance().getDoctorList();
+
+    }
 
 }

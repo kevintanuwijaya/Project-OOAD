@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Vector;
 
 import com.mysql.jdbc.PreparedStatement;
@@ -13,6 +14,8 @@ import models.Bill;
 import models.BillDetail;
 import models.Employee;
 import models.Medicine;
+import models.Patient;
+import models.PatientDetail;
 
 public class DatabaseConnection {
 
@@ -328,6 +331,143 @@ public class DatabaseConnection {
     // return false;
     // }
 
+    public List<Patient> getAllPatient(){
+    	
+    	List<Patient> patients = new Vector<Patient>();
+		
+		String sqlQuery = "SELECT * FROM patient";
+		
+		try {
+	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	
+	        ResultSet rs = stat.executeQuery();
+	
+	        if (rs.next()) {
+	
+	            Patient patient = new Patient();
+	            patient.setPatientID(rs.getInt("PatientID"));
+	            patient.setName(rs.getString("Name"));
+	            patient.setDOB(rs.getDate("DOB"));
+	            
+	            patients.add(patient);
+	        	
+	        }
+	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+		return patients;
+    	
+    }
+    
+    public List<PatientDetail> getAllPatientDetail(int patientID){
+    	
+    	List<PatientDetail> patientDetails = new Vector<PatientDetail>();
+		
+		String sqlQuery = "SELECT * FROM patientdetail WHERE PatientID = ?";
+		
+		try {
+	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	        stat.setInt(1, patientID);
+	
+	        ResultSet rs = stat.executeQuery();
+	
+	        if (rs.next()) {
+	
+	            PatientDetail patientDetail = new PatientDetail();
+	            patientDetail.setPatientID(rs.getInt("PatientID"));
+	            patientDetail.setPatientDetailID(rs.getInt("PatientDetailID"));
+	            patientDetail.setEmployeeID(rs.getInt("EmployeeID"));
+	            patientDetail.setSymptom(rs.getString("Symptom"));
+	            patientDetail.setCheckDate(rs.getDate("CheckDate"));
+	            
+	            patientDetails.add(patientDetail);
+	        }
+	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+		return patientDetails;
+    	
+    }
+    
+    
+    
+    
+    /*
+     * Employee
+     */
+    
+    
+    public List<Employee> getAllEmployee(){
+		
+		List<Employee> employees = new Vector<Employee>();
+		
+		String sqlQuery = "SELECT * FROM employee";
+		
+		try {
+	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	
+	        ResultSet rs = stat.executeQuery();
+	
+	        while (rs.next()) {
+	
+	            Employee employee = new Employee();
+	            employee.setEmployeeID(rs.getInt("EmployeeID"));
+	            employee.setRoleID(rs.getInt("RoleID"));
+	            employee.setName(rs.getString("Name"));
+	            employee.setUsername(rs.getString("Username"));
+	            employee.setPassword(rs.getString("Password"));
+	            employee.setSalary(rs.getInt("Salary"));
+	            employee.setStatus(rs.getNString("Status"));
+	
+	            employees.add(employee);
+	        }
+	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+		
+		return employees;
+	}
+
+	public List<Employee> getDoctorList(){
+		
+		List<Employee> employees = new Vector<Employee>();
+		
+		String sqlQuery = "SELECT * FROM employee E JOIN role R ON R.RoleID = E.RoleID WHERE R.Name = ?";
+		
+		try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setString(1, "Doctor");
+
+            ResultSet rs = stat.executeQuery();
+
+            if (rs.next()) {
+
+                Employee employee = new Employee();
+                employee.setEmployeeID(rs.getInt("EmployeeID"));
+                employee.setRoleID(rs.getInt("RoleID"));
+                employee.setName(rs.getString("Name"));
+                employee.setUsername(rs.getString("Username"));
+                employee.setPassword(rs.getString("Password"));
+                employee.setSalary(rs.getInt("Salary"));
+                employee.setStatus(rs.getNString("Status"));
+
+                employees.add(employee);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		
+		
+		return employees;
+	}
+
     public Employee getEmployee(String username, String password) {
 
         String sqlQuery = "SELECT * FROM employee where Username = ? AND Password = ?";
@@ -358,5 +498,90 @@ public class DatabaseConnection {
         }
 
         return null;
+    }
+
+    public Boolean insertEmployee(Employee employee) {
+        String name = employee.getName();
+        String userName = employee.getUsername();
+        int roleID = employee.getRoleID();
+        int salary = employee.getSalary();
+        String password = employee.getPassword();
+        String status = employee.getStatus();
+        String sqlQuery = "INSERT INTO employee(RoleID, Name, Username, Password, Salary, Status) VALUES(?, ?, ?, ?, ?, ?);";
+
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setInt(1, roleID);
+            stat.setString(2, name);
+            stat.setString(3, userName);
+            stat.setString(4, password);
+            stat.setInt(5, salary);
+            stat.setString(6, status);
+
+            int result = stat.executeUpdate();
+
+            if (result != -1){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Boolean updateEmployee(Employee employee){
+        int id = employee.getEmployeeID();
+
+        String name = employee.getName();
+        String userName = employee.getUsername();
+        int roleID = employee.getRoleID();
+        int salary = employee.getSalary();
+        String password = employee.getPassword();
+        String status = employee.getStatus();
+
+        String sqlQuery = "UPDATE employee SET RoleID = ?, Name = ?, Username = ?, Password = ?, Salary = ?, Status = ? WHERE EmployeeID = ?;";
+        
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setInt(1, roleID);
+            stat.setString(2, name);
+            stat.setString(3, userName);
+            stat.setString(4, password);
+            stat.setInt(5, salary);
+            stat.setString(6, status);
+            stat.setInt(7, id);
+
+            int result = stat.executeUpdate();
+
+            if (result != -1)
+                return true;
+        } catch (SQLException e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean fireEmployee(Employee employee){
+        int id = employee.getEmployeeID();
+
+        String sqlQuery = "UPDATE employee SET Status = ? WHERE EmployeeID = ?;";
+
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setString(1, "Inactive");
+            stat.setInt(2, id);
+
+            int result = stat.executeUpdate();
+
+            if (result != -1)
+                return true;
+
+        } catch (SQLException e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+        return false;
     }
 }
