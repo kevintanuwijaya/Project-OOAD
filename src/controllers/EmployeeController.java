@@ -35,7 +35,7 @@ public class EmployeeController {
 		return allEmployees;
 	}
 	
-	public Employee AddEmployee(String name, String username, int roleID, int salary) {
+	public Employee AddEmployee(String name, String username, int roleID, int salary, String password) {
 		
 		//validation
 		
@@ -45,6 +45,7 @@ public class EmployeeController {
 		employee.setUsername(username);
 		employee.setRoleID(roleID);
 		employee.setSalary(salary);
+		employee.setPassword(password);
 		employee.InsertEmployee();
 		
 		return employee;
@@ -73,8 +74,8 @@ public class EmployeeController {
 		Employee employee = new Employee();
 		
 		employee.GetEmployee(employeeID);
-		employee.setStatus("Retired");
-		employee.UpdateEmployee();
+		employee.setStatus("Inactive / Retired");
+		employee.FireEmployee();
 		
 		return employee;
 	}
@@ -88,7 +89,7 @@ public class EmployeeController {
 		return employee;
 	}
 	
-
+	
 	
 
 	
