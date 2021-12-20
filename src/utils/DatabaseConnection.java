@@ -263,7 +263,6 @@ public class DatabaseConnection {
 
         return false;
     }
-<<<<<<< HEAD
     
     public Boolean AddBillDetail(BillDetail billDetail) {
         int billDetailID = billDetail.getBillDetailID();
@@ -296,7 +295,6 @@ public class DatabaseConnection {
         return false;
     }
     
-=======
 
     // public Boolean insertBillDetail(BillDetail billDetail) {
     // int billDetailID = billDetail.getBillDetailID();
@@ -330,7 +328,6 @@ public class DatabaseConnection {
     // return false;
     // }
 
->>>>>>> 4ddb7fc4f7593ba171b241e9db52c3e2ee94b861
     public Employee getEmployee(String username, String password) {
 
         String sqlQuery = "SELECT * FROM employee where Username = ? AND Password = ?";
