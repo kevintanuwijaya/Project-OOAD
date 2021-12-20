@@ -27,7 +27,7 @@ import controllers.EmployeeController;
 import models.Employee;
 
 public class ViewEmployeeForm extends JFrame{
-	private JPanel idPanel, searchPanel, topPanel, centerPanel, bottomPanel, usernamePanel, namePanel, passwordPanel, rolePanel, salaryPanel, statusPanel, formPanel;
+	private JPanel idPanel, topPanel, centerPanel, bottomPanel, usernamePanel, namePanel, rolePanel, salaryPanel, formPanel; //passwordPanel statusPanel
     private JLabel idLabel, title, usernameLabel, nameLabel, passwordLabel, roleLabel, salaryLabel, statusLabel;
     private JTextField empId, empUsername, empName, empPassword, empRole, empSalary, empStatus;
     private JTable table;
@@ -149,14 +149,14 @@ public class ViewEmployeeForm extends JFrame{
         usernamePanel.setLayout(new GridLayout(2, 2, 4, 4));
         namePanel = new JPanel();
         namePanel.setLayout(new GridLayout(2, 2, 4, 4));
-        passwordPanel = new JPanel();
-        passwordPanel.setLayout(new GridLayout(2, 2, 4, 4));    
+        // passwordPanel = new JPanel();
+        // passwordPanel.setLayout(new GridLayout(2, 2, 4, 4));    
         rolePanel = new JPanel();
         rolePanel.setLayout(new GridLayout(2, 2, 4, 4));
         salaryPanel = new JPanel();
         salaryPanel.setLayout(new GridLayout(2, 2, 4, 4));
-        statusPanel = new JPanel();
-        statusPanel.setLayout(new GridLayout(2, 2, 4, 4));
+        // statusPanel = new JPanel();
+        // statusPanel.setLayout(new GridLayout(2, 2, 4, 4));
         
         rolesPanel = new JPanel(new GridLayout(1,5));
 		roleRB = new ButtonGroup();
@@ -205,8 +205,8 @@ public class ViewEmployeeForm extends JFrame{
         namePanel.add(nameLabel);
         namePanel.add(empName);
 
-        passwordPanel.add(passwordLabel);
-        passwordPanel.add(empPassword);
+        // passwordPanel.add(passwordLabel);
+        // passwordPanel.add(empPassword);
         
         rolePanel.add(roleLabel);
 //        rolePanel.add(empRole);
@@ -215,17 +215,17 @@ public class ViewEmployeeForm extends JFrame{
         salaryPanel.add(salaryLabel);
         salaryPanel.add(empSalary);
 
-        statusPanel.add(statusLabel);
-        statusPanel.add(empStatus);
+        // statusPanel.add(statusLabel);
+        // statusPanel.add(empStatus);
 
         // formPanel.add(searchPanel);
         formPanel.add(idPanel);
         formPanel.add(usernamePanel);
         formPanel.add(namePanel);
-        formPanel.add(passwordPanel);
+        // formPanel.add(passwordPanel);
         formPanel.add(rolePanel);
         formPanel.add(salaryPanel);
-        formPanel.add(statusPanel);
+        // formPanel.add(statusPanel);
         formPanel.setBorder(new EmptyBorder(25, 25, 25, 25));
 
         centerPanel.add(scrollPane);
@@ -255,7 +255,9 @@ public class ViewEmployeeForm extends JFrame{
                 // String password = empPassword.getText();
                 int roleID = 0;
                 int salary = Integer.parseInt(empSalary.getText());
+                String password = "asdasd";
                 // String status = empStatus.getText();
+                System.out.println(username +" "+ name +" "+ roleID +" "+ salary +"\n");
 
                 if (adminRb.isSelected()){
                     roleID = 1;
@@ -268,9 +270,10 @@ public class ViewEmployeeForm extends JFrame{
                 }else if (humanResourceRb.isSelected()){
                     roleID = 5;
                 }
+                System.out.println(username +""+ name +""+ roleID +""+ salary +"\n");
 
                 EmployeeController empController = EmployeeController.getInstance();
-                empController.AddEmployee(name, username, roleID, salary);
+                empController.AddEmployee(name, username, roleID, salary, password);
                 loadData();
             }
             
@@ -323,41 +326,27 @@ public class ViewEmployeeForm extends JFrame{
     }
 
     private void loadData() {
-        Object[] header = {"Employee Id", "Employee Name", "Employee Salary", "Employee Role"};
+        Object[] header = {"Employee Id", "Employee Name", "Employee Salary", "Employee Role", "Employee Status"};
 
         dtm = new DefaultTableModel(header, 0);
         List<Employee> emps = EmployeeController.getInstance().GetAllEmployee();
 
+        
         for (Employee employee : emps){
+            System.out.println(employee.getStatus());
             row = new Vector<>();
             row.add(Integer.toString(employee.getEmployeeID()));
             row.add(employee.getName());
             row.add(Integer.toString(employee.getSalary()));
             row.add(Integer.toString(employee.getRoleID()));
+            row.add(employee.getStatus());
             dtm.addRow(row);
+            
         }
         // dtm.addRow(dataDummy);
 
         table.setModel(dtm);
     }
-
-    // private void loadData() {
-    //     Object[] header = { "Medicine ID", "Medicine Name", "Medicine Price", "Medicine Stock" };
-
-    //     dtm = new DefaultTableModel(header, 0);
-    //     List<Medicine> meds = MedicineController.getInstance().getAllMedicine();
-
-    //     for (Medicine medicine : meds) {
-    //         row = new Vector<>();
-    //         row.add(Integer.toString(medicine.getMedicineID()));
-    //         row.add(medicine.getName());
-    //         row.add(Integer.toString(medicine.getPrice()));
-    //         row.add(Integer.toString(medicine.getStock()));
-    //         dtm.addRow(row);
-    //     }
-
-    //     table.setModel(dtm);
-    // }
 
 	public ViewEmployeeForm() {
 		// TODO Auto-generated constructor stub
