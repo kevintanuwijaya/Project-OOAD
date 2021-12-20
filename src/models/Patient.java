@@ -4,6 +4,10 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
+import utils.DatabaseConnection;
+
 public class Patient {
 
 	private int PatientID;
@@ -40,40 +44,43 @@ public class Patient {
 	
 	public Patient AddPatient() {
 		
-		//add new patient to database
+		Patient patient = DatabaseConnection.getInstance().addPatient(this);
 		
-		return this;
+		if(patient == null) {
+			
+		}
+		
+		return patient;
 	}
 	
 	public List<Patient> GetAllPatient(){
 		
-		List<Patient> allPatients = new Vector<Patient>();
-		
-		//get all patient from database
-		
-		return allPatients;
+		return DatabaseConnection.getInstance().getAllPatient();
 	}
 	
 	public List<Patient> SearchPatient(String name){
 		
-		List<Patient> selectedPatients = new Vector<Patient>();
-		
-		//get some patient by name from database
-		
-		return selectedPatients;
+		return DatabaseConnection.getInstance().searchPatient(name);
 	}
 	
 	public Patient UpdatePatient() {
 		
-		//update this patient data
+		Patient patient = DatabaseConnection.getInstance().UpdatePatient(this);
+		
+		if(patient == null) {
+			
+		}
 		
 		return this;
 	}
 	
 	public Patient GetPatient(int patientID) {
 		
-		//get patient data by name in database
-		//set all attribute from database to this class
+		Patient patient = DatabaseConnection.getInstance().GetPatient(patientID);
+		
+		if(patient == null) {
+			
+		}
 		
 		return this;
 	}

@@ -330,6 +330,113 @@ public class DatabaseConnection {
     //
     // return false;
     // }
+    
+    /*
+     * Patient
+     */
+    
+    public Patient addPatient(Patient patient) {
+    	
+    	String sqlQuery = "INSERT INTO patient VALUES (?,?)";
+    	
+    	try {
+	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	        stat.setString(1, patient.getName());
+	        stat.setDate(2, patient.getDOB());
+	        
+	        int add = stat.executeUpdate();
+	        
+	        if(add > 0) {
+	        	return patient;
+	        }
+	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+    	
+    	return null;
+    }
+    
+    public List<Patient> searchPatient(String name){
+    	
+    	List<Patient> patients = new Vector<Patient>();
+    	
+    	String sqlQuery = "SELECT * FROM patient WHERE Name LIKE \'%?$\'";
+    	
+    	try {
+	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	        stat.setString(1, name);
+	        
+	        ResultSet rs = stat.executeQuery();
+	
+	        if (rs.next()) {
+	
+	            Patient patient = new Patient();
+	            patient.setPatientID(rs.getInt("PatientID"));
+	            patient.setName(rs.getString("Name"));
+	            patient.setDOB(rs.getDate("DOB"));
+	            
+	            patients.add(patient);
+	        	
+	        }
+	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+		return patients;	
+    }
+    
+    public Patient UpdatePatient(Patient patient) {
+		
+    	String sqlQuery = "UPDATE patient SET Name = ?, DOB = ? WHERE PatientID = ?";
+    	
+    	try {
+	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	        stat.setString(1, patient.getName());
+	        stat.setDate(2, patient.getDOB());
+	        stat.setInt(3, patient.getPatientID());
+	        
+	        int add = stat.executeUpdate();
+	        
+	        if(add > 0) {
+	        	return patient;
+	        }
+	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+    	
+    	return null;
+	}
+	
+	public Patient GetPatient(int patientID) {
+		
+		String sqlQuery = "SELECT * FROM patient WHERE PatientID = ?";
+    	
+    	try {
+	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	        stat.setInt(1, patientID);
+	        
+	        ResultSet rs = stat.executeQuery();
+	
+	        if (rs.next()) {
+	
+	            Patient patient = new Patient();
+	            patient.setPatientID(rs.getInt("PatientID"));
+	            patient.setName(rs.getString("Name"));
+	            patient.setDOB(rs.getDate("DOB"));
+	            
+	            return patient;
+	        	
+	        }
+	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+		return null;
+	}
 
     public List<Patient> getAllPatient(){
     	
@@ -393,14 +500,36 @@ public class DatabaseConnection {
     	
     }
     
+    public PatientDetail AddPatientDetail(PatientDetail patientDetail) {
+		
+		String sqlQuery = "INSERT INTO patientdetail VALUES (?,?,?,?)";
+		
+		try {
+	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	        stat.setInt(1, patientDetail.getPatientID());
+	        stat.setInt(2, patientDetail.getEmployeeID());
+	        stat.setString(3, patientDetail.getSymptom());
+	        stat.setDate(4, patientDetail.getCheckDate());
+	        
+	        int add = stat.executeUpdate();
+	        
+	        if(add > 0) {
+	        	return patientDetail;
+	        }
+	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+		return null;
+	}
+    
     
     
     
     /*
      * Employee
      */
-    
-    
     public List<Employee> getAllEmployee(){
 		
 		List<Employee> employees = new Vector<Employee>();
@@ -584,4 +713,5 @@ public class DatabaseConnection {
         }
         return false;
     }
+    
 }

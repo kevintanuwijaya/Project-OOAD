@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Vector;
 
+import utils.DatabaseConnection;
+
 public class PatientDetail {
 
 	private int PatientID;
@@ -57,16 +59,18 @@ public class PatientDetail {
 	}
 	
 	public List<PatientDetail> GetAllPatientDetail(int patientID){
-		List<PatientDetail> patientDetails = new Vector<PatientDetail>();
 		
-		//get all patient details from database
+		return DatabaseConnection.getInstance().getAllPatientDetail(patientID);
 		
-		return patientDetails;
 	}
 	
 	public PatientDetail AddPatientDetail() {
 		
-		//add this patient detail to database
+		PatientDetail patientDetail = DatabaseConnection.getInstance().AddPatientDetail(this);
+		
+		if(patientDetail == null) {
+			
+		}
 		
 		return this;
 	}
