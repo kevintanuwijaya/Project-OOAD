@@ -52,15 +52,17 @@ public class EmployeeController {
 		return employee;
 	}
 	
-	public Employee UpdateEmployee(int employeeID, String name, String username, String password, int salary) {
+	public Employee UpdateEmployee(int employeeID, String name, String username, int role, String password, int salary) {
 		
 		//validation
 		
 		Employee employee = new Employee();
 		
-		employee.GetEmployee(employeeID);
-		employee.setUsername(username);
+		employee = employee.GetEmployee(employeeID);
+
 		employee.setName(name);
+		employee.setUsername(username);
+		employee.setRoleID(role);
 		employee.setPassword(password);
 		employee.setSalary(salary);
 		
@@ -75,7 +77,8 @@ public class EmployeeController {
 		
 		Employee employee = new Employee();
 		
-		employee.GetEmployee(employeeID);
+		employee = employee.GetEmployee(employeeID);
+		employee.setStatus("Inactive");
 		employee.FireEmployee();
 		
 		return employee;
@@ -90,7 +93,13 @@ public class EmployeeController {
 		return employee.login();
 	}
 	
-	
+	public Employee GetEmployee(int employeeID) {
+		
+		Employee employee = new Employee();
+		
+		return employee.GetEmployee(employeeID);
+		
+	}
 	
 
 	

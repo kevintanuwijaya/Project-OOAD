@@ -79,7 +79,7 @@ public class Employee {
 	 * Print employee ID
 	 */
 	public Employee GetEmployee(int employeeID) {
-
+		setEmployeeID(employeeID);
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 		
 		String sqlQuery = "SELECT * FROM employee where EmployeeID = ?";
@@ -145,7 +145,7 @@ public class Employee {
 		
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 
-        String sqlQuery = "UPDATE employee SET Name = ?, Username = ?, Password = ?, Salary = ? WHERE EmployeeID = ?;";
+        String sqlQuery = "UPDATE employee SET Name = ?, Username = ?, Password = ?, Salary = ?, RoleID = ? WHERE EmployeeID = ?;";
         
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
@@ -153,11 +153,14 @@ public class Employee {
             stat.setString(2, getUsername());
             stat.setString(3, getPassword());
             stat.setInt(4, getSalary());
-            stat.setInt(5, getEmployeeID());
+			stat.setInt(5, getRoleID());
+            stat.setInt(6, getEmployeeID());
 
             int result = stat.executeUpdate();
 
-            if (result != -1) return this;
+            if (result != -1) {
+				return this;
+			}
             
         } catch (SQLException e) {
             //TODO: handle exception
@@ -174,18 +177,19 @@ public class Employee {
 	public Employee FireEmployee() {
 		
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-        String status = "Inactive";
 
         String sqlQuery = "UPDATE employee SET Status = ? WHERE EmployeeID = ?;";
 
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setString(1, status);
+            stat.setString(1, getStatus());
             stat.setInt(2, getEmployeeID());
 
             int result = stat.executeUpdate();
 
-            if (result != -1) return this;
+            if (result != -1) {
+				return this;
+			}
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -283,7 +287,7 @@ public class Employee {
 
             ResultSet rs = stat.executeQuery();
 
-            if (rs.next()) {
+            while (rs.next()) {
 
                 Employee employee = new Employee();
                 employee.setEmployeeID(rs.getInt("EmployeeID"));
