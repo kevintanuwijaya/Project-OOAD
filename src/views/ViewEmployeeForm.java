@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Vector;
 
@@ -22,6 +24,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+// import org.w3c.dom.events.MouseEvent;
 
 import controllers.EmployeeController;
 import models.Employee;
@@ -116,6 +120,7 @@ public class ViewEmployeeForm extends JFrame{
 
         empId = new JTextField();
         empId.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+        empId.setEditable(false);
 
         empUsername = new JTextField();
         empUsername.setColumns(40);
@@ -244,11 +249,42 @@ public class ViewEmployeeForm extends JFrame{
     }
 
     private void setListener() {
+
+        table.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = table.getSelectedRow();
+                empId.setText(table.getValueAt(row, 0).toString());
+                empName.setText(table.getValueAt(row, 2).toString());
+                empUsername.setText(table.getValueAt(row, 1).toString());
+                empSalary.setText(table.getValueAt(row, 5).toString());
+                Employee employee = EmployeeController.getInstance().GetEmployee(Integer.parseInt(empId.getText()));
+
+                if (employee.getRoleID() == 1){
+                    adminRb.setSelected(true);
+                }else if (employee.getRoleID() == 2){
+                    pharmacistRb.setSelected(true);
+                }else if (employee.getRoleID() == 3){
+                    doctorRb.setSelected(true);
+                }else if (employee.getRoleID() == 4){
+                    nurseRb.setSelected(true);
+                }else if (employee.getRoleID() == 5){
+                    humanResourceRb.setSelected(true);
+                }
+                
+            }
+
+        });
         addButton.addActionListener(new ActionListener(){
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
+
+
+
+
                 // int employeeID = Integer.parseInt(empId.getText());
                 String username = empUsername.getText();
                 String name = empName.getText();
@@ -327,7 +363,7 @@ public class ViewEmployeeForm extends JFrame{
     }
 
     private void loadData() {
-        Object[] header = {"Employee Id", "Employee Name", "Employee Salary", "Employee Role", "Employee Status"};
+        Object[] header = {"Employee Id", "Employee Username", "Employee Name", "Employee Salary", "Employee Role", "Employee Status"};
 
         dtm = new DefaultTableModel(header, 0);
         List<Employee> emps = EmployeeController.getInstance().GetAllEmployee();
@@ -336,6 +372,7 @@ public class ViewEmployeeForm extends JFrame{
         for (Employee employee : emps){
             row = new Vector<>();
             row.add(Integer.toString(employee.getEmployeeID()));
+            row.add(employee.getUsername());
             row.add(employee.getName());
             row.add(Integer.toString(employee.getSalary()));
             row.add(Integer.toString(employee.getRoleID()));

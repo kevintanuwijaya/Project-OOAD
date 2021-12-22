@@ -145,7 +145,7 @@ public class Employee {
 		
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 
-        String sqlQuery = "UPDATE employee SET Name = ?, Username = ?, Password = ?, Salary = ?, RoleID = ? WHERE EmployeeID = ?;";
+        String sqlQuery = "UPDATE employee SET Name = ?, Username = ?, Password = ?, Salary = ?, RoleID = ?, Status = ? WHERE EmployeeID = ?;";
         
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
@@ -154,11 +154,12 @@ public class Employee {
             stat.setString(3, getPassword());
             stat.setInt(4, getSalary());
 			stat.setInt(5, getRoleID());
-            stat.setInt(6, getEmployeeID());
+			stat.setString(6, getStatus());
+            stat.setInt(7, getEmployeeID());
 
             int result = stat.executeUpdate();
 
-            if (result != -1) {
+            if (result > 0) {
 				return this;
 			}
             
@@ -187,7 +188,7 @@ public class Employee {
 
             int result = stat.executeUpdate();
 
-            if (result != -1) {
+            if (result > 0) {
 				return this;
 			}
 
