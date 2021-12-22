@@ -92,13 +92,13 @@ public class Medicine {
 
 		setMedicineID(medicineID);
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-		String sqlQuery = "SELECT * FROM medicine WHERE MedicineId = ?;";
+		String sqlQuery = "SELECT * FROM medicine WHERE MedicineId = ?";
 
 		try {
 			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
 			stat.setInt(1, getMedicineID());
 
-			ResultSet result = stat.executeQuery(sqlQuery);
+			ResultSet result = stat.executeQuery();
 
 			if (result.next()) {
 				setMedicineID(result.getInt("MedicineId"));
@@ -130,7 +130,7 @@ public class Medicine {
 			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
 			stat.setString(1, "%" + name + "%");
 
-			ResultSet result = stat.executeQuery(sqlQuery);
+			ResultSet result = stat.executeQuery();
 
 			while (result.next()) {
 				Medicine med = new Medicine();
