@@ -59,7 +59,6 @@ public class EmployeeController {
 		Employee employee = new Employee();
 		
 		employee.GetEmployee(employeeID);
-
 		employee.setUsername(username);
 		employee.setName(name);
 		employee.setPassword(password);
@@ -77,7 +76,6 @@ public class EmployeeController {
 		Employee employee = new Employee();
 		
 		employee.GetEmployee(employeeID);
-		
 		employee.FireEmployee();
 		
 		return employee;
