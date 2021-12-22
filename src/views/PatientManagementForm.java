@@ -10,9 +10,14 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.sql.Date;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.time.chrono.JapaneseDate;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -34,6 +39,8 @@ import javax.swing.event.RowSorterEvent;
 import javax.swing.table.DefaultTableModel;
 
 import models.Employee;
+import models.Patient;
+import models.PatientDetail;
 import net.sourceforge.jdatepicker.JDatePicker;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -42,15 +49,15 @@ import net.sourceforge.jdatepicker.impl.UtilDateModel;
 public class PatientManagementForm extends JFrame{
 
 	private JPanel northPanel,centerPanel,southPanel;
-	private JPanel formPanel, searchPanel, namePanel, DOBPanel, employeePanel, symptomPanel, checkDatePanel, tablePanel;
-	private JLabel title, searchLabel, nameLabel, DOBLabel, employeeLabel, symptomLabel, checkDateLabel;
-	private JTextField searchField, nameField,symptomField;
+	private JPanel formPanel, searchPanel, patientIDPanel,namePanel, DOBPanel, employeePanel, symptomPanel, checkDatePanel, tablePanel;
+	private JLabel title, searchLabel, patientIDLabel, nameLabel, DOBLabel, employeeLabel, symptomLabel, checkDateLabel;
+	private JTextField patientIDField, searchField, nameField,symptomField;
 	private JTable PatientTable, PatientDetailTabel;
 	private DefaultTableModel dtmPatient, dtmPatientDetail;
 	private UtilDateModel DOBModel, checkDateModel;
 	private JDatePanelImpl DOBDatePanel, checkDateDatePanel;
 	private JDatePickerImpl DOBPicker, checkDatePicker;
-	private JButton backBtn, insertBtn, updateBtn, deleteBtn,clearBtn;
+	private JButton searchBtn,backBtn, insertBtn, updateBtn,clearBtn;
 	private JScrollPane patientScrollPane, patientDetailScrollPane;
 	private JComboBox<Employee> employeesCombo;
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -58,7 +65,7 @@ public class PatientManagementForm extends JFrame{
 	
 	private void initItem() {
 		//employee dummy
-		employee.setRoleID(1);
+		employee.setRoleID(3);
 		setLayout(new BorderLayout());
 		
 		northPanel = new JPanel();
@@ -85,9 +92,13 @@ public class PatientManagementForm extends JFrame{
 		searchField = new JTextField();
 		searchField.setPreferredSize(new Dimension((int)screenSize.getWidth()-300,25));
 		
+		searchBtn = new JButton("Search");
 		backBtn = new JButton("Back To Menu");
 		clearBtn = new JButton("Clear Field");
 		
+		patientIDPanel = new JPanel();
+		patientIDPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		patientIDPanel.setPreferredSize(new Dimension((int)screenSize.getWidth(),25));
 		namePanel = new JPanel();
 		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		namePanel.setPreferredSize(new Dimension((int)screenSize.getWidth(),25));
@@ -104,10 +115,15 @@ public class PatientManagementForm extends JFrame{
 		checkDatePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		checkDatePanel.setPreferredSize(new Dimension((int)screenSize.getWidth(),25));
 		
-		insertBtn = new JButton("Insert Patient");
 		updateBtn = new JButton("Update Patient");
-		deleteBtn = new JButton("Delete Patient");
 
+		patientIDLabel = new JLabel("Patient ID");
+		patientIDLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+		patientIDLabel.setPreferredSize(new Dimension(150, 25));
+		patientIDField = new JTextField();
+		patientIDField.setPreferredSize(new Dimension((int)screenSize.getWidth()-300,25));
+		patientIDField.setEditable(false);
+		
 		nameLabel = new JLabel("Pantient Name");
 		nameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		nameLabel.setPreferredSize(new Dimension(150, 25));
@@ -125,8 +141,8 @@ public class PatientManagementForm extends JFrame{
 		employeeLabel = new JLabel("Employee");
 		employeeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		employeeLabel.setPreferredSize(new Dimension(150, 25));
-		Vector<Employee> currentEmp = loadEmployees();
-		employeesCombo = new JComboBox<>(currentEmp);
+		List<Employee> currentEmp = loadEmployees();
+		employeesCombo = new JComboBox<>((Vector) currentEmp);
 		employeesCombo.setPreferredSize(new Dimension((int)screenSize.getWidth()-300,25));
 		
 		symptomLabel = new JLabel("Symptoms");
@@ -160,6 +176,18 @@ public class PatientManagementForm extends JFrame{
 				super.sorterChanged(e);
 			}	
 		};
+		PatientTable.addMouseListener(new MouseAdapter() {
+		
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = PatientTable.getSelectedRow();
+				patientIDField.setText(PatientTable.getValueAt(row, 0).toString());
+				int patientID = Integer.parseInt(PatientTable.getValueAt(row, 0).toString());
+				loadDataPatientDetail(patientID);
+			}
+			
+		});
+		
 		
 		PatientDetailTabel = new JTable() {
 			
@@ -175,13 +203,31 @@ public class PatientManagementForm extends JFrame{
 				super.sorterChanged(e);
 			}
 		};
+		PatientDetailTabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = PatientTable.getSelectedRow();
+				symptomField.setText(PatientDetailTabel.getValueAt(row, 3).toString());
+				Date selectedDate = Date.valueOf((PatientDetailTabel.getValueAt(row, 4).toString()));
+				String[] datas = selectedDate.toLocalDate().toString().split("-");
+//				int year = Integer.parseInt(datas[0]);
+//				int month = Integer.parseInt(datas[1]);
+//				int day = Integer.parseInt(datas[2]);
+//				checkDatePicker.getModel().setYear(year);
+				
+				
+				
+			}
+		});
 	}
 	
 	private void setItem() {
 		
 		northPanel.add(title);
 		patientScrollPane = new JScrollPane(PatientTable);
+		patientScrollPane.setPreferredSize(new Dimension(((int)screenSize.getWidth()-300)/2, 400));
 		patientDetailScrollPane = new JScrollPane(PatientDetailTabel);
+		patientDetailScrollPane.setPreferredSize(new Dimension(((int)screenSize.getWidth()-300)/2, 400));
 		tablePanel.add(patientScrollPane);
 		tablePanel.add(patientDetailScrollPane);
 		centerPanel.add(tablePanel);
@@ -192,34 +238,42 @@ public class PatientManagementForm extends JFrame{
 		formPanel.add(searchPanel);
 		formPanel.setBorder(new EmptyBorder(25,25,25,25));
 		
-		if(employee.getRoleID() == 3 || employee.getRoleID() == 4) {
+		if(employee.getRoleID() == 1) {
+			insertBtn = new JButton("Insert Patient");
 			namePanel.add(nameLabel);
 			namePanel.add(nameField);
 			DOBPanel.add(DOBLabel);
 			DOBPanel.add(DOBPicker);
-			employeePanel.add(employeeLabel);
-			employeePanel.add(employeesCombo);
-			symptomPanel.add(symptomLabel);
-			symptomPanel.add(symptomField);
-			checkDatePanel.add(checkDateLabel);
-			checkDatePanel.add(checkDatePicker);
-			southPanel.add(insertBtn);
-			southPanel.add(updateBtn);
-			southPanel.add(deleteBtn);
-
-			
 			formPanel.add(namePanel);
 			formPanel.add(DOBPanel);
-			formPanel.add(employeePanel);
-			formPanel.add(symptomPanel);
-			formPanel.add(checkDatePanel);
-		}
+			southPanel.add(searchBtn);
+			southPanel.add(insertBtn);
+			
+		}else
+			if(employee.getRoleID() == 3 || employee.getRoleID() == 4) {
+				insertBtn = new JButton("Insert Patient Detail");
+				patientIDPanel.add(patientIDLabel);
+				patientIDPanel.add(patientIDField);
+				employeePanel.add(employeeLabel);
+				employeePanel.add(employeesCombo);
+				symptomPanel.add(symptomLabel);
+				symptomPanel.add(symptomField);
+				checkDatePanel.add(checkDateLabel);
+				checkDatePanel.add(checkDatePicker);
+				southPanel.add(insertBtn);
+				southPanel.add(updateBtn);
+	
+				formPanel.add(patientIDPanel);
+				formPanel.add(employeePanel);
+				formPanel.add(symptomPanel);
+				formPanel.add(checkDatePanel);
+			}
 		
 				
 		centerPanel.add(formPanel);
 		centerPanel.setBorder(new EmptyBorder(25, 25, 25, 25));
-		southPanel.add(backBtn);
 		southPanel.add(clearBtn);
+		southPanel.add(backBtn);
 
 		add(northPanel,BorderLayout.NORTH);
 		add(centerPanel,BorderLayout.CENTER);
@@ -245,12 +299,14 @@ public class PatientManagementForm extends JFrame{
 				// TODO Auto-generated method stub
 				searchField.setText("");
 				nameField.setText("");
+				DOBDatePanel.getModel().setValue(null);
 				employeesCombo.setSelectedIndex(0);
 				symptomField.setText("");
+				checkDateDatePanel.getModel().setValue(null);
 			}
 		});
 		
-		if(employee.getRoleID() == 3 || employee.getRoleID() == 4) {
+//		if(employee.getRoleID() == 3 || employee.getRoleID() == 4) {
 			insertBtn.addActionListener(new ActionListener() {
 				
 				@Override
@@ -268,24 +324,13 @@ public class PatientManagementForm extends JFrame{
 					
 				}
 			});
-			
-			deleteBtn.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
-		}
+//		}
 		
 	}
 	
-	private Vector<Employee> loadEmployees(){
-		
-		Vector<Employee> employees = new Vector<Employee>();
-		
-		return employees;
+	private List<Employee> loadEmployees(){
+		Employee model = new Employee();
+		return model.GetDoctorList();
 	}
 	
 	private void loadDataPatient() {
@@ -293,20 +338,48 @@ public class PatientManagementForm extends JFrame{
 		Object[] header = {"Patient ID","Patient Name","Patient DOB"};
 		dtmPatient = new DefaultTableModel(header,0);
 		
-		PatientTable.setModel(dtmPatient);
+		Patient modelPatient = new Patient();
+		List<Patient> patients = modelPatient.GetAllPatient();
 		
+		for (Patient patient : patients) {
+			Vector<Object> row = new Vector<Object>();
+			row.add(patient.getPatientID());
+			row.add(patient.getName());
+			row.add(patient.getDOB());
+			
+			dtmPatient.addRow(row);
+		}
+		
+		PatientTable.setModel(dtmPatient);
 	}
 	
-	private void loadDataPatientDetail() {
+	private void loadDataPatientDetail(int patientID) {
 		
 		Object[] header = {"Patient ID","PatientDetail ID","Employee ID","Symptom","CheckDate"};
 		dtmPatientDetail = new DefaultTableModel(header,0);
 		
+		PatientDetail modelPatientDetail = new PatientDetail();
+		List<PatientDetail> patientDetails = modelPatientDetail.GetAllPatientDetail(patientID);
 		
-		
+		for (PatientDetail patientDetail : patientDetails) {
+			Vector<Object> row = new Vector<Object>();
+			row.add(patientDetail.getPatientID());
+			row.add(patientDetail.getPatientDetailID());
+			row.add(patientDetail.getEmployeeID());
+			row.add(patientDetail.getSymptom());
+			row.add(patientDetail.getCheckDate());
+			
+			dtmPatientDetail.addRow(row);
+		}
 		
 		PatientDetailTabel.setModel(dtmPatientDetail);
+	}
+	
+	private void loadDataPatientDetail() {
+		Object[] header = {"Patient ID","PatientDetail ID","Employee ID","Symptom","CheckDate"};
+		dtmPatientDetail = new DefaultTableModel(header,0);
 		
+		PatientDetailTabel.setModel(dtmPatientDetail);
 	}
 	
 	private void insert() {
@@ -327,7 +400,6 @@ public class PatientManagementForm extends JFrame{
 		setListener();
 		loadDataPatient();
 		loadDataPatientDetail();
-		
 		
 		setVisible(true); 
 		setDefaultCloseOperation(EXIT_ON_CLOSE); 
