@@ -30,8 +30,9 @@ import javax.swing.table.DefaultTableModel;
 import controllers.EmployeeController;
 import models.Employee;
 
-public class ViewEmployeeForm extends JFrame{
-	private JPanel idPanel, topPanel, centerPanel, bottomPanel, usernamePanel, namePanel, rolePanel, salaryPanel, formPanel; //passwordPanel statusPanel
+public class ViewEmployeeForm extends JFrame {
+    private JPanel idPanel, topPanel, centerPanel, bottomPanel, usernamePanel, namePanel, rolePanel, salaryPanel,
+            formPanel; // passwordPanel statusPanel
     private JLabel idLabel, title, usernameLabel, nameLabel, passwordLabel, roleLabel, salaryLabel, statusLabel;
     private JTextField empId, empUsername, empName, empPassword, empRole, empSalary, empStatus;
     private JTable table;
@@ -40,7 +41,7 @@ public class ViewEmployeeForm extends JFrame{
     private JButton addButton, updateButton, fireButton;
 
     ButtonGroup roleRB;
-    private JRadioButton adminRb,pharmacistRb,doctorRb,nurseRb,humanResourceRb; 
+    private JRadioButton adminRb, pharmacistRb, doctorRb, nurseRb, humanResourceRb;
 
     /* For Search Form Panel */
     // private JPanel searchFormPanel; // Panel untuk 1 Search Form Panel
@@ -52,7 +53,7 @@ public class ViewEmployeeForm extends JFrame{
 
     // private Vector<String> columnName;
     // private Vector<String> dataDummy;
-    
+
     private JPanel rolesPanel;
 
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -135,8 +136,6 @@ public class ViewEmployeeForm extends JFrame{
         empStatus = new JTextField();
         empStatus.setColumns(40);
 
-        
-
         // searchPanel = new JPanel();
         // searchPanel.setLayout(new GridLayout(2, 2, 4, 4));
 
@@ -145,7 +144,8 @@ public class ViewEmployeeForm extends JFrame{
         // searchLabel.setPreferredSize(new Dimension(150, 25));
 
         // searchTextField = new JTextField();
-        // searchTextField.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+        // searchTextField.setPreferredSize(new Dimension((int) screenSize.getWidth() -
+        // 300, 25));
 
         idPanel = new JPanel();
         idPanel.setLayout(new GridLayout(2, 2, 4, 4));
@@ -155,34 +155,33 @@ public class ViewEmployeeForm extends JFrame{
         namePanel = new JPanel();
         namePanel.setLayout(new GridLayout(2, 2, 4, 4));
         // passwordPanel = new JPanel();
-        // passwordPanel.setLayout(new GridLayout(2, 2, 4, 4));    
+        // passwordPanel.setLayout(new GridLayout(2, 2, 4, 4));
         rolePanel = new JPanel();
         rolePanel.setLayout(new GridLayout(2, 2, 4, 4));
         salaryPanel = new JPanel();
         salaryPanel.setLayout(new GridLayout(2, 2, 4, 4));
         // statusPanel = new JPanel();
         // statusPanel.setLayout(new GridLayout(2, 2, 4, 4));
-        
-        rolesPanel = new JPanel(new GridLayout(1,5));
-		roleRB = new ButtonGroup();
-	
-		adminRb = new JRadioButton("Administrative");
-		rolesPanel.add(adminRb);
-		pharmacistRb = new JRadioButton("Pharmacist");
-		rolesPanel.add(pharmacistRb);
-		doctorRb = new JRadioButton("Doctor");
-		rolesPanel.add(doctorRb);
-		nurseRb = new JRadioButton("Nurse");
-		rolesPanel.add(nurseRb);
-		humanResourceRb = new JRadioButton("Human Resource");
-		rolesPanel.add(humanResourceRb);
-		
-		roleRB.add(adminRb);
-		roleRB.add(pharmacistRb);
-		roleRB.add(doctorRb);
-		roleRB.add(nurseRb);
-		roleRB.add(humanResourceRb);
-        
+
+        rolesPanel = new JPanel(new GridLayout(1, 5));
+        roleRB = new ButtonGroup();
+
+        adminRb = new JRadioButton("Administrative");
+        rolesPanel.add(adminRb);
+        pharmacistRb = new JRadioButton("Pharmacist");
+        rolesPanel.add(pharmacistRb);
+        doctorRb = new JRadioButton("Doctor");
+        rolesPanel.add(doctorRb);
+        nurseRb = new JRadioButton("Nurse");
+        rolesPanel.add(nurseRb);
+        humanResourceRb = new JRadioButton("Human Resource");
+        rolesPanel.add(humanResourceRb);
+
+        roleRB.add(adminRb);
+        roleRB.add(pharmacistRb);
+        roleRB.add(doctorRb);
+        roleRB.add(nurseRb);
+        roleRB.add(humanResourceRb);
 
         /* For Bottom Panel */
         bottomPanel = new JPanel();
@@ -195,8 +194,8 @@ public class ViewEmployeeForm extends JFrame{
 
     private void setItem() {
         /* Top Panel */
-    	topPanel.add(title);
-    	
+        topPanel.add(title);
+
         /* Center Panel */
         // searchPanel.add(searchLabel);
         // searchPanel.add(searchTextField);
@@ -212,9 +211,9 @@ public class ViewEmployeeForm extends JFrame{
 
         // passwordPanel.add(passwordLabel);
         // passwordPanel.add(empPassword);
-        
+
         rolePanel.add(roleLabel);
-//        rolePanel.add(empRole);
+        // rolePanel.add(empRole);
         rolePanel.add(rolesPanel);
 
         salaryPanel.add(salaryLabel);
@@ -256,34 +255,31 @@ public class ViewEmployeeForm extends JFrame{
             public void mouseClicked(MouseEvent e) {
                 int row = table.getSelectedRow();
                 empId.setText(table.getValueAt(row, 0).toString());
-                empName.setText(table.getValueAt(row, 2).toString());
                 empUsername.setText(table.getValueAt(row, 1).toString());
-                empSalary.setText(table.getValueAt(row, 5).toString());
+                empName.setText(table.getValueAt(row, 2).toString());
+                empSalary.setText(table.getValueAt(row, 3).toString());
                 Employee employee = EmployeeController.getInstance().GetEmployee(Integer.parseInt(empId.getText()));
 
-                if (employee.getRoleID() == 1){
+                if (employee.getRoleID() == 1) {
                     adminRb.setSelected(true);
-                }else if (employee.getRoleID() == 2){
+                } else if (employee.getRoleID() == 2) {
                     pharmacistRb.setSelected(true);
-                }else if (employee.getRoleID() == 3){
+                } else if (employee.getRoleID() == 3) {
                     doctorRb.setSelected(true);
-                }else if (employee.getRoleID() == 4){
+                } else if (employee.getRoleID() == 4) {
                     nurseRb.setSelected(true);
-                }else if (employee.getRoleID() == 5){
+                } else if (employee.getRoleID() == 5) {
                     humanResourceRb.setSelected(true);
                 }
-                
+
             }
 
         });
-        addButton.addActionListener(new ActionListener(){
+        addButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-
-
-
 
                 // int employeeID = Integer.parseInt(empId.getText());
                 String username = empUsername.getText();
@@ -294,27 +290,27 @@ public class ViewEmployeeForm extends JFrame{
                 String password = "asdasd";
                 // String status = empStatus.getText();
 
-                if (adminRb.isSelected()){
+                if (adminRb.isSelected()) {
                     roleID = 1;
-                }else if (pharmacistRb.isSelected()){
+                } else if (pharmacistRb.isSelected()) {
                     roleID = 2;
-                }else if (doctorRb.isSelected()){
+                } else if (doctorRb.isSelected()) {
                     roleID = 3;
-                }else if (nurseRb.isSelected()){
+                } else if (nurseRb.isSelected()) {
                     roleID = 4;
-                }else if (humanResourceRb.isSelected()){
+                } else if (humanResourceRb.isSelected()) {
                     roleID = 5;
                 }
-                System.out.println(username +" "+ name +" "+ roleID +" "+ salary +"\n");
+                System.out.println(username + " " + name + " " + roleID + " " + salary + "\n");
 
                 EmployeeController empController = EmployeeController.getInstance();
                 empController.AddEmployee(name, username, roleID, salary, password);
                 loadData();
             }
-            
+
         });
 
-        updateButton.addActionListener(new ActionListener(){
+        updateButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -327,27 +323,27 @@ public class ViewEmployeeForm extends JFrame{
                 int salary = Integer.parseInt(empSalary.getText());
                 // String status = empStatus.getText();
 
-                if (adminRb.isSelected()){
+                if (adminRb.isSelected()) {
                     roleID = 1;
-                }else if (pharmacistRb.isSelected()){
+                } else if (pharmacistRb.isSelected()) {
                     roleID = 2;
-                }else if (doctorRb.isSelected()){
+                } else if (doctorRb.isSelected()) {
                     roleID = 3;
-                }else if (nurseRb.isSelected()){
+                } else if (nurseRb.isSelected()) {
                     roleID = 4;
-                }else if (humanResourceRb.isSelected()){
+                } else if (humanResourceRb.isSelected()) {
                     roleID = 5;
                 }
 
-                System.out.println(username +" "+ name +" "+ roleID +" "+ salary +"\n");
+                System.out.println(username + " " + name + " " + roleID + " " + salary + "\n");
                 EmployeeController empController = EmployeeController.getInstance();
                 empController.UpdateEmployee(employeeID, name, username, roleID, password, salary);
                 loadData();
             }
-            
+
         });
 
-        fireButton.addActionListener(new ActionListener(){
+        fireButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -358,18 +354,18 @@ public class ViewEmployeeForm extends JFrame{
                 empController.FireEmployee(employeeID);
                 loadData();
             }
-            
+
         });
     }
 
     private void loadData() {
-        Object[] header = {"Employee Id", "Employee Username", "Employee Name", "Employee Salary", "Employee Role", "Employee Status"};
+        Object[] header = { "Employee Id", "Employee Username", "Employee Name", "Employee Salary", "Employee Role",
+                "Employee Status" };
 
         dtm = new DefaultTableModel(header, 0);
         List<Employee> emps = EmployeeController.getInstance().GetAllEmployee();
 
-        
-        for (Employee employee : emps){
+        for (Employee employee : emps) {
             row = new Vector<>();
             row.add(Integer.toString(employee.getEmployeeID()));
             row.add(employee.getUsername());
@@ -378,16 +374,16 @@ public class ViewEmployeeForm extends JFrame{
             row.add(Integer.toString(employee.getRoleID()));
             row.add(employee.getStatus());
             dtm.addRow(row);
-            
+
         }
         // dtm.addRow(dataDummy);
 
         table.setModel(dtm);
     }
 
-	public ViewEmployeeForm() {
-		// TODO Auto-generated constructor stub
-		initItem();
+    public ViewEmployeeForm() {
+        // TODO Auto-generated constructor stub
+        initItem();
         setItem();
         setListener();
         loadData();
@@ -398,6 +394,6 @@ public class ViewEmployeeForm extends JFrame{
         setResizable(true);
         setLocationRelativeTo(null);
         setTitle("Employee Management Form");
-	}
+    }
 
 }
