@@ -1,7 +1,11 @@
 package models;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
+
+import com.mysql.jdbc.PreparedStatement;
 
 import utils.DatabaseConnection;
 
@@ -48,12 +52,36 @@ public class BillDetail {
 		Quantity = quantity;
 	}
 	
-	
+	/*
+	 * Add new bill detail
+	 */
 	public BillDetail AddBillDetail() {
 		
-		DatabaseConnection.getInstance().AddBillDetail(this);
+		Connection conn = DatabaseConnection.getInstance().getConnection();
 		
-		return this;
+        String sqlQuery = "INSERT INTO billdetail(BillDetailID, BillID, MedicineID, Quantity) VALUES(?, ?, ?, ?);";
+
+        // Statement -> Object yang dipake buat execute
+        // static SQL statement
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setInt(1,  getBillDetailID());
+            stat.setInt(2, getBillDetailID());
+            stat.setInt(3, getMedicineID());
+            stat.setInt(4, getQuantity());
+
+            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
+            // stat.executeQuery() -> return table dalam bentuk ResultSet
+
+            int result = stat.executeUpdate();
+
+            if (result != -1) return this;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
 	}
 	
 	public List<BillDetail> GetAllBillDetail(int billID){

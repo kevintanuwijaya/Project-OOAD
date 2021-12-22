@@ -68,6 +68,7 @@ public class PatientDetail {
 	 */
 	public List<PatientDetail> GetAllPatientDetail(int patientID){
 		
+		setPatientID(patientID);
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 		List<PatientDetail> patientDetails = new Vector<PatientDetail>();
 		

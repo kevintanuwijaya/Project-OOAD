@@ -1,8 +1,13 @@
 package models;
 
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
+
+import com.mysql.jdbc.PreparedStatement;
 
 import utils.DatabaseConnection;
 
@@ -67,13 +72,38 @@ public class Bill {
 		Status = status;
 	}
 	
+	/*
+	 * Get all bill from database
+	 */
 	public List<Bill> GetAllBill(){
 		
-		List<Bill> allBills = new Vector<Bill>();
+		Connection conn = DatabaseConnection.getInstance().getConnection();
 		
-		allBills = DatabaseConnection.getInstance().getAllBill();
-		
-		return allBills;
+		List<Bill> bill = new Vector<>();
+
+        String sqlQuery = "SELECT * FROM bill";
+
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+
+            ResultSet result = stat.executeQuery(sqlQuery);
+
+            while (result.next()) {
+                Bill bil = new Bill();
+                bil.setBillID(result.getInt("BillID"));
+                bil.setEmployeeID(result.getInt("EmployeeID"));
+                bil.setPatientID(result.getInt("PatientID"));
+                bil.setDateTimeCreated(result.getDate("DatetimeCreated"));
+                bil.setPaymentType(result.getString("PaymentType"));
+                bil.setStatus(result.getString("Status"));
+
+                bill.add(bil);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return bill;
 	}
 	
 	public Bill SearchBill(int patientID){
@@ -99,22 +129,50 @@ public class Bill {
 	
 	public Bill AddBill() {
 		
-		DatabaseConnection.getInstance().insertBill(this);
-		
-		//add this Bill to database
-		
-		return this;
+		Connection conn = DatabaseConnection.getInstance().getConnection();
+        
+        String sqlQuery = "INSERT INTO bill(EmployeeID, PatientID, DateTimeCreated, PaymentType) VALUES(?, ?, ?, ?);";
+
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setInt(1, getEmployeeID());
+            stat.setInt(2, getPatientID());
+            stat.setDate(3, getDateTimeCreated());
+            stat.setString(4, getPaymentType());
+
+            int result = stat.executeUpdate();
+
+            if (result != -1) return this;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
 	}
 	
 	public Bill UpdateBill() {
 		
-		DatabaseConnection.getInstance().updateBill(this);
+		Connection conn = DatabaseConnection.getInstance().getConnection();
 		
-		//update this Bill in database
-		
-		return this;
+		String sqlQuery = "UPDATE bill SET EmployeeID = ?, PatientID = ?, DateTimeCreated = ?, PaymentType = ? WHERE BillID = ?;";
+
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setInt(1, getEmployeeID());
+            stat.setInt(2, getPatientID());
+            stat.setDate(3, getDateTimeCreated());
+            stat.setString(4, getPaymentType());
+
+            int result = stat.executeUpdate();
+
+            if (result != -1) return this;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
 	}
 	
-	
-
 }

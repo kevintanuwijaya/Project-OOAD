@@ -91,6 +91,7 @@ public class Medicine {
 	
 	public Medicine getMedicine(int medicineID) {
 
+		setMedicineID(medicineID);
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 		String sqlQuery = "SELECT * FROM medicine WHERE MedicineId = ?;";
 		
@@ -121,6 +122,7 @@ public class Medicine {
 	 */
 	public List<Medicine> searchMedicine(String name) {
 
+		setName(name);
 		List<Medicine> meds = new Vector<Medicine>();
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 

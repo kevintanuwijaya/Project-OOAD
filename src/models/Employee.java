@@ -1,7 +1,12 @@
 package models;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
+
+import com.mysql.jdbc.PreparedStatement;
 
 import utils.DatabaseConnection;
 
@@ -70,69 +75,233 @@ public class Employee {
 		return Name;
 	}
 	
-	
-	
-	// public Employee GetEmployee(int employeeID) {
-		
-	// 	//get employee data by employeeID
-	// 	//set all employee attributes from database to this class
-	// 	Employee employee = 
-		
-	// 	return this;
-	// }
+	/*
+	 * Print employee ID
+	 */
 	public Employee GetEmployee(int employeeID) {
 
-        // get employee data by employeeID
-        // set all employee attributes from database to this class
-        Employee employee = new Employee();
-        List<Employee> allEmployee = employee.GetAllEmployee();
+		Connection conn = DatabaseConnection.getInstance().getConnection();
+		
+		String sqlQuery = "SELECT * FROM employee where EmployeeID = ?";
+	
+	        try {
+	            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	            stat.setInt(1, getEmployeeID());
+	
+	            ResultSet rs = stat.executeQuery();
+	
+	            if (rs.next()) {
+	                setEmployeeID(rs.getInt("EmployeeID"));
+	                setRoleID(rs.getInt("RoleID"));
+	                setName(rs.getString("Name"));
+	                setSalary(rs.getInt("Salary"));
+	                setStatus(rs.getNString("Status"));
+	
+	                return this;
+	            }
+	
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 
-        for (Employee emp : allEmployee) {
-            if (emp.getEmployeeID() == employeeID) {
-                return emp;
-            }
-        }
-
-        return employee;
+        return null;
+        
     }
 	
+	/*
+	 * Insert employee in database
+	 */
 	public Employee InsertEmployee() {
 		
-		DatabaseConnection.getInstance().insertEmployee(this);
+		Connection conn = DatabaseConnection.getInstance().getConnection();
 		
-		return this;
+        String sqlQuery = "INSERT INTO employee(RoleID, Name, Username, Password, Salary, Status) VALUES(?, ?, ?, ?, ?, ?);";
+
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setInt(1, getRoleID());
+            stat.setString(2, getName());
+            stat.setString(3, getUsername());
+            stat.setString(4, getPassword());
+            stat.setInt(5, getSalary());
+            stat.setString(6, getStatus());
+
+            int result = stat.executeUpdate();
+
+            if (result != -1){
+                return this;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
 	}
 	
+	/*
+	 * Update employee in database
+	 */
 	public Employee UpdateEmployee() {
 		
-		DatabaseConnection.getInstance().updateEmployee(this);
-		
-		return this;
+		Connection conn = DatabaseConnection.getInstance().getConnection();
+
+        String sqlQuery = "UPDATE employee SET Name = ?, Username = ?, Password = ?, Salary = ? WHERE EmployeeID = ?;";
+        
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setString(1, getName());
+            stat.setString(2, getUsername());
+            stat.setString(3, getPassword());
+            stat.setInt(4, getSalary());
+            stat.setInt(5, getEmployeeID());
+
+            int result = stat.executeUpdate();
+
+            if (result != -1) return this;
+            
+        } catch (SQLException e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+
+        return null;
 	}
 
+	
+	/*
+	 * Fire employee
+	 */
 	public Employee FireEmployee() {
 		
-		DatabaseConnection.getInstance().fireEmployee(this);
-		
-		return this;
-	}
-	
-	
-	
-	public Employee getEmployee(String username, String password) {
-		
-		return DatabaseConnection.getInstance().getEmployee(username, password);
-		
-	}
-	
-	public List<Employee> GetAllEmployee(){
+		Connection conn = DatabaseConnection.getInstance().getConnection();
+        String status = "Inactive";
 
-        return DatabaseConnection.getInstance().getAllEmployee();
+        String sqlQuery = "UPDATE employee SET Status = ? WHERE EmployeeID = ?;";
+
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setString(1, status);
+            stat.setInt(2, getEmployeeID());
+
+            int result = stat.executeUpdate();
+
+            if (result != -1) return this;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+	}
+	
+	
+	/*
+	 * Get all available doctor
+	 */
+	public Employee login() {
+		
+		Connection conn = DatabaseConnection.getInstance().getConnection();
+		
+		String sqlQuery = "SELECT * FROM employee where Username = ? AND Password = ?";
+	
+	        try {
+	            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	            stat.setString(1, getUsername());
+	            stat.setString(2, getPassword());
+	
+	            ResultSet rs = stat.executeQuery();
+	
+	            if (rs.next()) {
+	                setEmployeeID(rs.getInt("EmployeeID"));
+	                setRoleID(rs.getInt("RoleID"));
+	                setName(rs.getString("Name"));
+	                setSalary(rs.getInt("Salary"));
+	                setStatus(rs.getNString("Status"));
+	
+	                return this;
+	            }
+	
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+
+        return null;
+	}
+	
+	/*
+	 * Get all employee
+	 */
+	public List<Employee> GetAllEmployee(){
+        
+        Connection conn = DatabaseConnection.getInstance().getConnection();
+        
+        List<Employee> employees = new Vector<Employee>();
+		
+		String sqlQuery = "SELECT * FROM employee";
+		
+		try {
+	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	
+	        ResultSet rs = stat.executeQuery();
+	
+	        while (rs.next()) {
+	
+	            Employee employee = new Employee();
+	            employee.setEmployeeID(rs.getInt("EmployeeID"));
+	            employee.setRoleID(rs.getInt("RoleID"));
+	            employee.setName(rs.getString("Name"));
+	            employee.setUsername(rs.getString("Username"));
+	            employee.setPassword(rs.getString("Password"));
+	            employee.setSalary(rs.getInt("Salary"));
+	            employee.setStatus(rs.getNString("Status"));
+	
+	            employees.add(employee);
+	        }
+	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+		
+		return employees;
 
     }
+	
+	/*
+	 * Get all available doctor
+	 */
 	public List<Employee> GetDoctorList(){
 
-        return DatabaseConnection.getInstance().getDoctorList();
+        Connection conn = DatabaseConnection.getInstance().getConnection();
+        String role = "Doctor";
+        List<Employee> employees = new Vector<Employee>();
+		
+		String sqlQuery = "SELECT * FROM employee E JOIN role R ON R.RoleID = E.RoleID WHERE R.Name = ?";
+		
+		try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            stat.setString(1, role);
+
+            ResultSet rs = stat.executeQuery();
+
+            if (rs.next()) {
+
+                Employee employee = new Employee();
+                employee.setEmployeeID(rs.getInt("EmployeeID"));
+                employee.setRoleID(rs.getInt("RoleID"));
+                employee.setName(rs.getString("Name"));
+                employee.setUsername(rs.getString("Username"));
+                employee.setPassword(rs.getString("Password"));
+                employee.setSalary(rs.getInt("Salary"));
+                employee.setStatus(rs.getNString("Status"));
+
+                employees.add(employee);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		
+		return employees;
 
     }
 

@@ -52,14 +52,13 @@ public class Patient {
 	 */
 	
 	public Patient AddPatient() {
-		
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-		String sqlQuery = "INSERT INTO patient VALUES (?,?)";
+		String sqlQuery = "INSERT INTO patient (Name,DOB) VALUES (?,?)";
     	
     	try {
 	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-	        stat.setString(1, this.getName());
-	        stat.setDate(2, this.getDOB());
+	        stat.setString(1, getName());
+	        stat.setDate(2, getDOB());
 	        
 	        int add = stat.executeUpdate();
 	        
@@ -91,7 +90,7 @@ public class Patient {
 	
 	        ResultSet rs = stat.executeQuery();
 	
-	        if (rs.next()) {
+	        while (rs.next()) {
 	
 	            Patient patient = new Patient();
 	            patient.setPatientID(rs.getInt("PatientID"));
@@ -113,20 +112,20 @@ public class Patient {
 	 * Search Patient based on its name
 	 */
 	public List<Patient> SearchPatient(String name){
-		
+
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 		
 		List<Patient> patients = new Vector<Patient>();
     	
-    	String sqlQuery = "SELECT * FROM patient WHERE Name LIKE \'%?$\'";
+    	String sqlQuery = "SELECT * FROM patient WHERE Name LIKE ?";
     	
     	try {
 	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-	        stat.setString(1, name);
+	        stat.setString(1, "%" + name + "%");
 	        
 	        ResultSet rs = stat.executeQuery();
 	
-	        if (rs.next()) {
+	        while (rs.next()) {
 	
 	            Patient patient = new Patient();
 	            patient.setPatientID(rs.getInt("PatientID"));
@@ -177,6 +176,7 @@ public class Patient {
 	 */
 	public Patient GetPatient(int patientID) {
 		
+		setPatientID(patientID);
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 		String sqlQuery = "SELECT * FROM patient WHERE PatientID = ?";
     	
@@ -187,7 +187,6 @@ public class Patient {
 	        ResultSet rs = stat.executeQuery();
 	
 	        if (rs.next()) {
-	            setPatientID(rs.getInt("PatientID"));
 	            setName(rs.getString("Name"));
 	            setDOB(rs.getDate("DOB"));
 	            
