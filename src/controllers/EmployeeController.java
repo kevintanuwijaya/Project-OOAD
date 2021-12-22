@@ -46,6 +46,7 @@ public class EmployeeController {
 		employee.setRoleID(roleID);
 		employee.setSalary(salary);
 		employee.setPassword(password);
+		employee.setStatus("Active");
 		employee.InsertEmployee();
 		
 		return employee;
@@ -84,11 +85,11 @@ public class EmployeeController {
 	
 	public Employee loginEmployee(String username, String password) {
 		
-		Employee model = new Employee();
+		Employee employee = new Employee();
+		employee.setUsername(username);
+		employee.setPassword(password);
 		
-		Employee employee = model.getEmployee(username, password);
-		
-		return employee;
+		return employee.login();
 	}
 	
 	
