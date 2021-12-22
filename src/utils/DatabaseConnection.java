@@ -635,7 +635,7 @@ public class DatabaseConnection {
         int roleID = employee.getRoleID();
         int salary = employee.getSalary();
         String password = employee.getPassword();
-        String status = employee.getStatus();
+        String status = "Active";
         String sqlQuery = "INSERT INTO employee(RoleID, Name, Username, Password, Salary, Status) VALUES(?, ?, ?, ?, ?, ?);";
 
         try {
@@ -663,22 +663,22 @@ public class DatabaseConnection {
 
         String name = employee.getName();
         String userName = employee.getUsername();
-        int roleID = employee.getRoleID();
+        // int roleID = employee.getRoleID();
         int salary = employee.getSalary();
         String password = employee.getPassword();
-        String status = employee.getStatus();
+        // String status = employee.getStatus();
 
-        String sqlQuery = "UPDATE employee SET RoleID = ?, Name = ?, Username = ?, Password = ?, Salary = ?, Status = ? WHERE EmployeeID = ?;";
+        String sqlQuery = "UPDATE employee SET Name = ?, Username = ?, Password = ?, Salary = ? WHERE EmployeeID = ?;";
         
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setInt(1, roleID);
-            stat.setString(2, name);
-            stat.setString(3, userName);
-            stat.setString(4, password);
-            stat.setInt(5, salary);
-            stat.setString(6, status);
-            stat.setInt(7, id);
+            // stat.setInt(1, roleID);
+            stat.setString(1, name);
+            stat.setString(2, userName);
+            stat.setString(3, password);
+            stat.setInt(4, salary);
+            // stat.setString(6, status);
+            stat.setInt(5, id);
 
             int result = stat.executeUpdate();
 
@@ -694,12 +694,13 @@ public class DatabaseConnection {
 
     public Boolean fireEmployee(Employee employee){
         int id = employee.getEmployeeID();
+        String status = "Inactive";
 
         String sqlQuery = "UPDATE employee SET Status = ? WHERE EmployeeID = ?;";
 
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setString(1, "Inactive");
+            stat.setString(1, status);
             stat.setInt(2, id);
 
             int result = stat.executeUpdate();

@@ -51,14 +51,16 @@ public class EmployeeController {
 		return employee;
 	}
 	
-	public Employee UpdateEmployee(int employeeID, String username, String password, int salary) {
+	public Employee UpdateEmployee(int employeeID, String name, String username, String password, int salary) {
 		
 		//validation
 		
 		Employee employee = new Employee();
 		
 		employee.GetEmployee(employeeID);
+
 		employee.setUsername(username);
+		employee.setName(name);
 		employee.setPassword(password);
 		employee.setSalary(salary);
 		
@@ -74,7 +76,7 @@ public class EmployeeController {
 		Employee employee = new Employee();
 		
 		employee.GetEmployee(employeeID);
-		employee.setStatus("Inactive / Retired");
+		
 		employee.FireEmployee();
 		
 		return employee;

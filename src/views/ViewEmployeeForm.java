@@ -33,7 +33,7 @@ public class ViewEmployeeForm extends JFrame{
     private JTable table;
     private DefaultTableModel dtm;
     private JScrollPane scrollPane;
-    private JButton addButton, updateButton, deleteButton;
+    private JButton addButton, updateButton, fireButton;
 
     ButtonGroup roleRB;
     private JRadioButton adminRb,pharmacistRb,doctorRb,nurseRb,humanResourceRb; 
@@ -46,8 +46,8 @@ public class ViewEmployeeForm extends JFrame{
 
     private Vector<String> row;
 
-    private Vector<String> columnName;
-    private Vector<String> dataDummy;
+    // private Vector<String> columnName;
+    // private Vector<String> dataDummy;
     
     private JPanel rolesPanel;
 
@@ -67,20 +67,20 @@ public class ViewEmployeeForm extends JFrame{
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
         // TODO Buat inital table
-        columnName = new Vector<>();
-       columnName.add("Employee ID");
-        columnName.add("Employee Name");
-        columnName.add("Employee Salary");
-        columnName.add("Employee Role");
+        // columnName = new Vector<>();
+        // columnName.add("Employee ID");
+        // columnName.add("Employee Name");
+        // columnName.add("Employee Salary");
+        // columnName.add("Employee Role");
 
-        System.out.println(columnName);
+        // System.out.println(columnName);
 
         // TODO Data dummy, nanti harus diganti pake data yang diambil dari data access
-        dataDummy = new Vector<>();
-        dataDummy.add("1");
-        dataDummy.add("Steven Santoso Suntialto");
-        dataDummy.add("2MiliarJuta");
-        dataDummy.add("Single?");
+        // dataDummy = new Vector<>();
+        // dataDummy.add("1");
+        // dataDummy.add("Steven Santoso Suntialto");
+        // dataDummy.add("2MiliarJuta");
+        // dataDummy.add("Single?");
 
         table = new JTable() {
             @Override
@@ -184,7 +184,7 @@ public class ViewEmployeeForm extends JFrame{
 
         addButton = new JButton("Add");
         updateButton = new JButton("Update");
-        deleteButton = new JButton("Delete");
+        fireButton = new JButton("Fire");
         // searchButton = new JButton("Search");
     }
 
@@ -235,7 +235,7 @@ public class ViewEmployeeForm extends JFrame{
         /* Bottom Panel */
         bottomPanel.add(addButton);
         bottomPanel.add(updateButton);
-        bottomPanel.add(deleteButton);
+        bottomPanel.add(fireButton);
         // bottomPanel.add(searchButton);
 
         add(topPanel, BorderLayout.NORTH);
@@ -257,7 +257,6 @@ public class ViewEmployeeForm extends JFrame{
                 int salary = Integer.parseInt(empSalary.getText());
                 String password = "asdasd";
                 // String status = empStatus.getText();
-                System.out.println(username +" "+ name +" "+ roleID +" "+ salary +"\n");
 
                 if (adminRb.isSelected()){
                     roleID = 1;
@@ -270,7 +269,7 @@ public class ViewEmployeeForm extends JFrame{
                 }else if (humanResourceRb.isSelected()){
                     roleID = 5;
                 }
-                System.out.println(username +""+ name +""+ roleID +""+ salary +"\n");
+                System.out.println(username +" "+ name +" "+ roleID +" "+ salary +"\n");
 
                 EmployeeController empController = EmployeeController.getInstance();
                 empController.AddEmployee(name, username, roleID, salary, password);
@@ -286,7 +285,7 @@ public class ViewEmployeeForm extends JFrame{
                 // TODO Auto-generated method stub
                 int employeeID = Integer.parseInt(empId.getText());
                 String username = empUsername.getText();
-                // String name = empName.getText();
+                String name = empName.getText();
                 String password = empPassword.getText();
                 // int roleID = 0;
                 int salary = Integer.parseInt(empSalary.getText());
@@ -304,13 +303,13 @@ public class ViewEmployeeForm extends JFrame{
                 //     roleID = 5;
                 // }
                 EmployeeController empController = EmployeeController.getInstance();
-                empController.UpdateEmployee(employeeID, username, password, salary);
+                empController.UpdateEmployee(employeeID, name, username, password, salary);
                 loadData();
             }
             
         });
 
-        deleteButton.addActionListener(new ActionListener(){
+        fireButton.addActionListener(new ActionListener(){
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -333,7 +332,6 @@ public class ViewEmployeeForm extends JFrame{
 
         
         for (Employee employee : emps){
-            System.out.println(employee.getStatus());
             row = new Vector<>();
             row.add(Integer.toString(employee.getEmployeeID()));
             row.add(employee.getName());
