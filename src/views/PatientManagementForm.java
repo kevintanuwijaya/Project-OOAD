@@ -336,7 +336,7 @@ public class PatientManagementForm extends JFrame{
 				String patientID = patientIDField.getText();
 				String name = nameField.getText();
 				Date DOB = (Date) DOBPicker.getModel().getValue();
-				PatientController.getIntsance().UpdatePatient(patientID, name, DOB);
+				PatientController.getInstance().UpdatePatient(patientID, name, DOB);
 				loadAllDataPatient();
 				
 			}
@@ -404,7 +404,7 @@ public class PatientManagementForm extends JFrame{
 	}
 	
 	private void search(String name) {
-		List<Patient> patients = PatientController.getIntsance().SearchPatient(name);
+		List<Patient> patients = PatientController.getInstance().SearchPatient(name);
 		loadSearchDataPatient(patients);
 	}
 	
@@ -412,7 +412,7 @@ public class PatientManagementForm extends JFrame{
 		if(employee.getRoleID() == 1) {
 			String name = nameField.getText();
 			Date DOB = (Date) DOBPicker.getModel().getValue();
-			PatientController.getIntsance().AddPatient(name, DOB);
+			PatientController.getInstance().AddPatient(name, DOB);
 			loadAllDataPatient();
 		}else
 			if(employee.getRoleID() == 3 || employee.getRoleID() == 4) {
