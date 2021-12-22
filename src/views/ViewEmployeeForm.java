@@ -287,23 +287,25 @@ public class ViewEmployeeForm extends JFrame{
                 String username = empUsername.getText();
                 String name = empName.getText();
                 String password = empPassword.getText();
-                // int roleID = 0;
+                int roleID = 0;
                 int salary = Integer.parseInt(empSalary.getText());
                 // String status = empStatus.getText();
 
-                // if (adminRb.isSelected()){
-                //     roleID = 1;
-                // }else if (pharmacistRb.isSelected()){
-                //     roleID = 2;
-                // }else if (doctorRb.isSelected()){
-                //     roleID = 3;
-                // }else if (nurseRb.isSelected()){
-                //     roleID = 4;
-                // }else if (humanResourceRb.isSelected()){
-                //     roleID = 5;
-                // }
+                if (adminRb.isSelected()){
+                    roleID = 1;
+                }else if (pharmacistRb.isSelected()){
+                    roleID = 2;
+                }else if (doctorRb.isSelected()){
+                    roleID = 3;
+                }else if (nurseRb.isSelected()){
+                    roleID = 4;
+                }else if (humanResourceRb.isSelected()){
+                    roleID = 5;
+                }
+
+                System.out.println(username +" "+ name +" "+ roleID +" "+ salary +"\n");
                 EmployeeController empController = EmployeeController.getInstance();
-                empController.UpdateEmployee(employeeID, name, username, password, salary);
+                empController.UpdateEmployee(employeeID, name, username, roleID, password, salary);
                 loadData();
             }
             
