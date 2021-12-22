@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import models.Patient;
 import models.PatientDetail;
 
@@ -21,6 +23,10 @@ public class PatientController {
 	
 	private PatientController() {}
 	
+	/**
+	 * 
+	 * @return Get all patient from database
+	 */
 	public List<Patient> GetAllPatient(){
 		
 		Patient patient = new Patient();
@@ -30,16 +36,31 @@ public class PatientController {
 		return allPatients;
 	}
 	
-	public PatientDetail AddPatientDetail(int patientID, int employeeID, String symptom) {
+	
+	/**
+	 * 
+	 * @param patientID
+	 * @param employeeID
+	 * @param symptom
+	 * @return Insert new patient detail into database
+	 */
+	public PatientDetail AddPatientDetail(String patientID, int employeeID, String symptom) {
 		
-		//validation
+		if(patientID.equals("")) {
+			JOptionPane.showMessageDialog(null, "Kolom PatientID Kosong");
+			return null;
+		}else if(symptom.equals("")){
+			JOptionPane.showMessageDialog(null, "Kolom Symptom Kosong");
+			return null;
+		}
 		
+		int patientIDInt = Integer.parseInt(patientID);
 		PatientDetail patientDetail = new PatientDetail();
 		Date currentDate = new Date();
 		
 		java.sql.Date date = new java.sql.Date(currentDate.getTime());
 		
-		patientDetail.setPatientID(patientID);
+		patientDetail.setPatientID(patientIDInt);
 		patientDetail.setEmployeeID(employeeID);
 		patientDetail.setSymptom(symptom);
 		patientDetail.setCheckDate(date);
@@ -48,12 +69,16 @@ public class PatientController {
 		return patientDetail;
 	}
 	
-	/*
-	 * Search patient by Name
+	/**
+	 * @param name
+	 * @return Search patient by Name
 	 */
 	public List<Patient> SearchPatient(String name){
 		
-		//validation
+		if(name.equals("")) {
+			JOptionPane.showMessageDialog(null, "Kolom Nama Kosong");
+			return null;
+		}
 		
 		Patient modelPatient = new Patient();
 		
@@ -62,15 +87,24 @@ public class PatientController {
 		return selectedPatients;
 	}
 	
+	/**
+	 * 
+	 * @param patientID
+	 * @param name
+	 * @param DOB
+	 * @return
+	 */
 	public Patient UpdatePatient(String patientID, String name, Date DOB) {
 		
-		//validation
 		if(patientID.equals("")) {
-			
+			JOptionPane.showMessageDialog(null, "Kolom PatientID Kosong");
+			return null;
 		} else if(name.equals("")) {
-			
+			JOptionPane.showMessageDialog(null, "Kolom Nama Kosong");
+			return null;
 		} else if(DOB == null) {
-			
+			JOptionPane.showMessageDialog(null, "Kolom DOB Kosong");
+			return null;
 		}
 		int ID = Integer.parseInt(patientID);
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -87,22 +121,39 @@ public class PatientController {
 		return patient;
 	}
 	
-	public Patient GetPatient(int patientID) {
+	/**
+	 * 
+	 * @param patientID
+	 * @return Get patient base on ID
+	 */
+	public Patient GetPatient(String patientID) {
 	
-		//validation
+		if(patientID.equals("")) {
+			JOptionPane.showMessageDialog(null, "Kolom PatientID Kosong");
+			return null;
+		}
+		
+		int patientIDInt = Integer.parseInt(patientID);
 		
 		Patient patient = new Patient();
 		
-		return patient.GetPatient(patientID);
+		return patient.GetPatient(patientIDInt);
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param DOB
+	 * @return Insert new Patient 
+	 */
 	public Patient AddPatient(String name, Date DOB) {
 		
-		//validation
 		if(name.equals("")) {
-			
+			JOptionPane.showMessageDialog(null, "Kolom Nama Kosong");
+			return null;
 		}if(DOB == null) {
-			
+			JOptionPane.showMessageDialog(null, "Kolom DOB Kosong");
+			return null;
 		}
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		String dateStr = df.format(DOB);
@@ -117,22 +168,24 @@ public class PatientController {
 		return patient;
 	}
 	
-	public List<PatientDetail> GetAllPatientDetail(int patientID){
+	/**
+	 * @param patientID
+	 * @return Get all patientdetail from database
+	 */
+	public List<PatientDetail> GetAllPatientDetail(String patientID){
 		
-		//validation
+		if(patientID.equals("")) {
+			JOptionPane.showMessageDialog(null, "Kolom PatientID Kosong");
+			return null;
+		}
+		
+		int patientIDInt = Integer.parseInt(patientID);
 		
 		PatientDetail patientDetail = new PatientDetail();
 		
-		List<PatientDetail> patientDetails = patientDetail.GetAllPatientDetail(patientID);
+		List<PatientDetail> patientDetails = patientDetail.GetAllPatientDetail(patientIDInt);
 		
 		return patientDetails;
 	}
-	
-
-
-	
-
-	
-
 
 }

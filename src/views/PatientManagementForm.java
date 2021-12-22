@@ -43,13 +43,13 @@ public class PatientManagementForm extends JFrame{
 
 	private JPanel northPanel,centerPanel,southPanel;
 	private JPanel formPanel, searchPanel, patientIDPanel,namePanel, DOBPanel, employeePanel, symptomPanel, checkDatePanel, tablePanel;
-	private JLabel title, searchLabel, patientIDLabel, nameLabel, DOBLabel, employeeLabel, symptomLabel, checkDateLabel;
+	private JLabel title, searchLabel, patientIDLabel, nameLabel, DOBLabel, employeeLabel, symptomLabel;
 	private JTextField patientIDField, searchField, nameField,symptomField;
 	private JTable PatientTable, PatientDetailTabel;
 	private DefaultTableModel dtmPatient, dtmPatientDetail;
-	private UtilDateModel DOBModel, checkDateModel;
-	private JDatePanelImpl DOBDatePanel, checkDateDatePanel;
-	private JDatePickerImpl DOBPicker, checkDatePicker;
+	private UtilDateModel DOBModel;
+	private JDatePanelImpl DOBDatePanel;
+	private JDatePickerImpl DOBPicker;
 	private JButton searchBtn,backBtn, insertBtn, updateBtn,clearBtn;
 	private JScrollPane patientScrollPane, patientDetailScrollPane;
 	private JComboBox<Employee> employeesCombo;
@@ -58,7 +58,7 @@ public class PatientManagementForm extends JFrame{
 	
 	private void initItem() {
 		//employee dummy
-		employee.setRoleID(3);
+		employee.setRoleID(1);
 		setLayout(new BorderLayout());
 		
 		northPanel = new JPanel();
@@ -145,14 +145,6 @@ public class PatientManagementForm extends JFrame{
 		symptomField = new JTextField();
 		symptomField.setPreferredSize(new Dimension((int)screenSize.getWidth()-300,25));
 		
-		checkDateLabel = new JLabel("Check Date");
-		checkDateLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
-		checkDateLabel.setPreferredSize(new Dimension(150, 25));
-		
-		checkDateModel = new UtilDateModel();
-		checkDateDatePanel = new JDatePanelImpl(checkDateModel);
-		checkDatePicker = new JDatePickerImpl(checkDateDatePanel);
-		
 		title = new JLabel("Patient Management View");
 		title.setFont(new Font("Segoe UI",Font.BOLD,40));
 		
@@ -181,7 +173,7 @@ public class PatientManagementForm extends JFrame{
 				Date selectedDate = new Date(date.getTime());
 				DOBDatePanel.getModel().setDate(1900 + selectedDate.getYear(), selectedDate.getMonth(), selectedDate.getDay());
 				DOBDatePanel.getModel().setSelected(true);
-				int patientID = Integer.parseInt(PatientTable.getValueAt(row, 0).toString());
+				String patientID = PatientTable.getValueAt(row, 0).toString();
 				loadDataPatientDetail(patientID);
 			}
 			
@@ -205,15 +197,13 @@ public class PatientManagementForm extends JFrame{
 		PatientDetailTabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int row = PatientTable.getSelectedRow();
+				int row = PatientDetailTabel.getSelectedRow();
 				patientIDField.setText(PatientDetailTabel.getValueAt(row, 0).toString());
 				symptomField.setText(PatientDetailTabel.getValueAt(row, 3).toString());
 				java.sql.Date date = java.sql.Date.valueOf(PatientDetailTabel.getValueAt(row, 4).toString());
 				Date selectedDate = new Date(date.getTime());
 				int employeeID = Integer.parseInt(PatientDetailTabel.getValueAt(row, 2).toString());
-				employeesCombo.setSelectedIndex(0);
-				checkDateDatePanel.getModel().setDate(1900 + selectedDate.getYear(), selectedDate.getMonth(), selectedDate.getDay());
-				checkDateDatePanel.getModel().setSelected(true);
+				employeesCombo.setSelectedIndex(findDoctorInCombo(employeeID));
 				
 			}
 		});
@@ -240,8 +230,6 @@ public class PatientManagementForm extends JFrame{
 		employeePanel.add(employeesCombo);
 		symptomPanel.add(symptomLabel);
 		symptomPanel.add(symptomField);
-		checkDatePanel.add(checkDateLabel);
-		checkDatePanel.add(checkDatePicker);
 
 		formPanel.add(searchPanel);
 		formPanel.add(patientIDPanel);
@@ -259,7 +247,6 @@ public class PatientManagementForm extends JFrame{
 			if(employee.getRoleID() == 3 || employee.getRoleID() == 4) {
 				tablePanel.add(patientDetailScrollPane);
 				insertBtn = new JButton("Insert Patient Detail");
-				
 				
 				formPanel.add(employeePanel);
 				formPanel.add(symptomPanel);
@@ -306,7 +293,6 @@ public class PatientManagementForm extends JFrame{
 				DOBDatePanel.getModel().setValue(null);
 				employeesCombo.setSelectedIndex(-1);
 				symptomField.setText("");
-				checkDateDatePanel.getModel().setValue(null);
 			}
 		});
 		
@@ -381,13 +367,12 @@ public class PatientManagementForm extends JFrame{
 		PatientTable.setModel(dtmPatient);
 	}
 	
-	private void loadDataPatientDetail(int patientID) {
+	private void loadDataPatientDetail(String patientID) {
 		
 		Object[] header = {"Patient ID","PatientDetail ID","Employee ID","Symptom","CheckDate"};
 		dtmPatientDetail = new DefaultTableModel(header,0);
 		
-		PatientDetail modelPatientDetail = new PatientDetail();
-		List<PatientDetail> patientDetails = modelPatientDetail.GetAllPatientDetail(patientID);
+		List<PatientDetail> patientDetails = PatientController.getInstance().GetAllPatientDetail(patientID);
 		
 		for (PatientDetail patientDetail : patientDetails) {
 			Vector<Object> row = new Vector<Object>();
@@ -416,18 +401,23 @@ public class PatientManagementForm extends JFrame{
 			loadAllDataPatient();
 		}else
 			if(employee.getRoleID() == 3 || employee.getRoleID() == 4) {
-				
+				String patientID = patientIDField.getText();
+				List<Employee> doctorList = EmployeeController.getInstance().GetDoctorList();
+				int index = employeesCombo.getSelectedIndex();
+				int employeeID = doctorList.get(index).getEmployeeID();
+				String symptom = symptomField.getText();
+				PatientController.getInstance().AddPatientDetail(patientID, employeeID, symptom);
+				loadDataPatientDetail(patientID);
 			}
 	}
 	
 	private int findDoctorInCombo(int employeeID) {
 		List<Employee> doctorList = EmployeeController.getInstance().GetDoctorList();
-		int index = 0;
-		for (Employee employee : doctorList) {
-			if(employee.getEmployeeID() == employeeID) {
-				return index;
+		
+		for (int i = 0; i < doctorList.size(); i++) {
+			if(doctorList.get(i).getEmployeeID() == employeeID) {
+				return i;
 			}
-			index++;
 		}
 		return -1;
 	}
