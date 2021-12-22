@@ -1,6 +1,8 @@
 package controllers;
 
-import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import models.Patient;
@@ -8,9 +10,16 @@ import models.PatientDetail;
 
 public class PatientController {
 
-	public PatientController() {
-		// TODO Auto-generated constructor stub
+	public static PatientController instance = null;
+	
+	public static PatientController getInstance() {
+		if(instance == null) {
+			instance = new PatientController();
+		}
+		return instance;
 	}
+	
+	private PatientController() {}
 	
 	public List<Patient> GetAllPatient(){
 		
@@ -26,9 +35,9 @@ public class PatientController {
 		//validation
 		
 		PatientDetail patientDetail = new PatientDetail();
-		java.util.Date currentDate = new java.util.Date();
+		Date currentDate = new Date();
 		
-		Date date = new Date(currentDate.getTime());
+		java.sql.Date date = new java.sql.Date(currentDate.getTime());
 		
 		patientDetail.setPatientID(patientID);
 		patientDetail.setEmployeeID(employeeID);
@@ -39,26 +48,41 @@ public class PatientController {
 		return patientDetail;
 	}
 	
+	/*
+	 * Search patient by Name
+	 */
 	public List<Patient> SearchPatient(String name){
 		
 		//validation
 		
-		Patient patient = new Patient();
+		Patient modelPatient = new Patient();
 		
-		List<Patient> selectedPatients = patient.SearchPatient(name);
+		List<Patient> selectedPatients = modelPatient.SearchPatient(name);
 		
 		return selectedPatients;
 	}
 	
-	public Patient UpdatePatient(int patientID, String name, Date DOB) {
+	public Patient UpdatePatient(String patientID, String name, Date DOB) {
 		
 		//validation
+		if(patientID.equals("")) {
+			
+		} else if(name.equals("")) {
+			
+		} else if(DOB == null) {
+			
+		}
+		int ID = Integer.parseInt(patientID);
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String dateStr = df.format(DOB);
+		java.sql.Date currDate = java.sql.Date.valueOf(dateStr);
 		
 		Patient patient = new Patient();
 		
-		patient.setPatientID(patientID);
+		patient.setPatientID(ID);
 		patient.setName(name);
-		patient.setDOB(DOB);
+		patient.setDOB(currDate);
+		patient.UpdatePatient();
 		
 		return patient;
 	}
@@ -75,11 +99,19 @@ public class PatientController {
 	public Patient AddPatient(String name, Date DOB) {
 		
 		//validation
+		if(name.equals("")) {
+			
+		}if(DOB == null) {
+			
+		}
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String dateStr = df.format(DOB);
+		java.sql.Date currDate = java.sql.Date.valueOf(dateStr);
 		
 		Patient patient = new Patient();
 		
 		patient.setName(name);
-		patient.setDOB(DOB);
+		patient.setDOB(currDate);
 		patient.AddPatient();
 		
 		return patient;

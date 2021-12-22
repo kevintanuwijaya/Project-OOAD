@@ -60,27 +60,26 @@ public class Medicine {
 
 		List<Medicine> meds = new Vector<>();
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-		
+
 		String sqlQuery = "SELECT * FROM medicine";
 
-        try {
-            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
 
-            ResultSet result = stat.executeQuery(sqlQuery);
+			ResultSet result = stat.executeQuery(sqlQuery);
 
-            while (result.next()) {
-                Medicine med = new Medicine();
-                med.setMedicineID(result.getInt("MedicineId"));
-                med.setName(result.getString("Name"));
-                med.setPrice(result.getInt("Price"));
-                med.setStock(result.getInt("Stock"));
+			while (result.next()) {
+				Medicine med = new Medicine();
+				med.setMedicineID(result.getInt("MedicineId"));
+				med.setName(result.getString("Name"));
+				med.setPrice(result.getInt("Price"));
+				med.setStock(result.getInt("Stock"));
 
-                meds.add(med);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+				meds.add(med);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		return meds;
 	}
@@ -88,35 +87,34 @@ public class Medicine {
 	/*
 	 * get medicine information by medicineID from database
 	 */
-	
+
 	public Medicine getMedicine(int medicineID) {
 
 		setMedicineID(medicineID);
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 		String sqlQuery = "SELECT * FROM medicine WHERE MedicineId = ?;";
-		
-        try {
-            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setInt(1, getMedicineID());
 
-            ResultSet result = stat.executeQuery(sqlQuery);
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+			stat.setInt(1, getMedicineID());
 
-            if (result.next()) {
-            	setMedicineID(result.getInt("MedicineId"));
-            	setName(result.getString("Name"));
-            	setPrice(result.getInt("Price"));
-            	setStock(result.getInt("Stock"));
-            	
-                return this;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+			ResultSet result = stat.executeQuery(sqlQuery);
+
+			if (result.next()) {
+				setMedicineID(result.getInt("MedicineId"));
+				setName(result.getString("Name"));
+				setPrice(result.getInt("Price"));
+				setStock(result.getInt("Stock"));
+
+				return this;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		return null;
 	}
 
-	
 	/*
 	 * get all medicine by name from database
 	 */
@@ -126,26 +124,27 @@ public class Medicine {
 		List<Medicine> meds = new Vector<Medicine>();
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 
-		String sqlQuery = "SELECT * FROM medicine WHERE Name LIKE '%" + name + "%';";
+		String sqlQuery = "SELECT * FROM medicine WHERE Name LIKE ?;";
 
-        try {
-            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+			stat.setString(1, "%" + name + "%");
 
-            ResultSet result = stat.executeQuery(sqlQuery);
+			ResultSet result = stat.executeQuery(sqlQuery);
 
-            while (result.next()) {
-                Medicine med = new Medicine();
-                med.setMedicineID(result.getInt("MedicineId"));
-                med.setName(result.getString("Name"));
-                med.setPrice(result.getInt("Price"));
-                med.setStock(result.getInt("Stock"));
+			while (result.next()) {
+				Medicine med = new Medicine();
+				med.setMedicineID(result.getInt("MedicineId"));
+				med.setName(result.getString("Name"));
+				med.setPrice(result.getInt("Price"));
+				med.setStock(result.getInt("Stock"));
 
-                meds.add(med);
-            }
+				meds.add(med);
+			}
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		return meds;
 	}
@@ -154,54 +153,53 @@ public class Medicine {
 	 * add this medicine to database
 	 */
 	public Medicine insertMedicine() {
-		
+
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-		
+
 		String sqlQuery = "INSERT INTO medicine(Name, Price, Stock) VALUES(?, ?, ?);";
 
-        try {
-            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setString(1, getName());
-            stat.setInt(2, getPrice());
-            stat.setInt(3, getStock());
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+			stat.setString(1, getName());
+			stat.setInt(2, getPrice());
+			stat.setInt(3, getStock());
 
-            int result = stat.executeUpdate();
+			int result = stat.executeUpdate();
 
-            if (result != -1)
-                return this;
+			if (result != -1)
+				return this;
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		return null;
 	}
 
-	
 	/*
 	 * update this medicine from database
 	 */
 	public Medicine updateMedicine() {
-		
+
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-		
+
 		String sqlQuery = "UPDATE medicine SET Name = ?, Price = ?, Stock = ? WHERE MedicineId = ?;";
 
-        try {
-            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setString(1, getName());
-            stat.setInt(2, getPrice());
-            stat.setInt(3, getStock());
-            stat.setInt(4, getMedicineID());
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+			stat.setString(1, getName());
+			stat.setInt(2, getPrice());
+			stat.setInt(3, getStock());
+			stat.setInt(4, getMedicineID());
 
-            int result = stat.executeUpdate();
+			int result = stat.executeUpdate();
 
-            if (result != -1)
-                return this;
+			if (result != -1)
+				return this;
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		return null;
 	}
@@ -212,22 +210,22 @@ public class Medicine {
 	public Medicine deleteMedicine() {
 
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-		
+
 		String sqlQuery = "DELETE FROM medicine WHERE MedicineId = ?;";
 
-        try {
-            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setInt(1, getMedicineID());
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+			stat.setInt(1, getMedicineID());
 
-            int result = stat.executeUpdate();
+			int result = stat.executeUpdate();
 
-            if (result != -1)
-                return this;
+			if (result != -1)
+				return this;
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 
