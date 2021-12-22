@@ -49,6 +49,9 @@ public class PatientController {
 		if(patientID.equals("")) {
 			JOptionPane.showMessageDialog(null, "Kolom PatientID Kosong");
 			return null;
+		}else if(employeeID < 0) {
+			JOptionPane.showMessageDialog(null, "Kolom Employee Kosong");
+			return null;
 		}else if(symptom.equals("")){
 			JOptionPane.showMessageDialog(null, "Kolom Symptom Kosong");
 			return null;

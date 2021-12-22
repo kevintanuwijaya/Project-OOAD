@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -54,11 +55,10 @@ public class PatientManagementForm extends JFrame{
 	private JScrollPane patientScrollPane, patientDetailScrollPane;
 	private JComboBox<Employee> employeesCombo;
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	private Employee employee = new Employee();
+	private Employee employee = MainMenu.currentEmployee;
 	
 	private void initItem() {
-		//employee dummy
-		employee.setRoleID(1);
+		
 		setLayout(new BorderLayout());
 		
 		northPanel = new JPanel();
@@ -293,6 +293,7 @@ public class PatientManagementForm extends JFrame{
 				DOBDatePanel.getModel().setValue(null);
 				employeesCombo.setSelectedIndex(-1);
 				symptomField.setText("");
+				loadAllDataPatient();
 			}
 		});
 		
@@ -404,6 +405,10 @@ public class PatientManagementForm extends JFrame{
 				String patientID = patientIDField.getText();
 				List<Employee> doctorList = EmployeeController.getInstance().GetDoctorList();
 				int index = employeesCombo.getSelectedIndex();
+				if(index < 0) {
+					JOptionPane.showMessageDialog(null, "Kolom Employee Kosong");
+					return;
+				}
 				int employeeID = doctorList.get(index).getEmployeeID();
 				String symptom = symptomField.getText();
 				PatientController.getInstance().AddPatientDetail(patientID, employeeID, symptom);
