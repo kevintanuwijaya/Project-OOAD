@@ -90,7 +90,13 @@ public class EmployeeController {
 		return employee.login();
 	}
 	
-	
+	public Employee GetEmployee(int employeeID) {
+		
+		Employee employee = new Employee();
+		
+		return employee.GetEmployee(employeeID);
+		
+	}
 	
 
 	
