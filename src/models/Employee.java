@@ -79,7 +79,7 @@ public class Employee {
 	 * Print employee ID
 	 */
 	public Employee GetEmployee(int employeeID) {
-
+		setEmployeeID(employeeID);
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 		
 		String sqlQuery = "SELECT * FROM employee where EmployeeID = ?";
@@ -283,7 +283,7 @@ public class Employee {
 
             ResultSet rs = stat.executeQuery();
 
-            if (rs.next()) {
+            while (rs.next()) {
 
                 Employee employee = new Employee();
                 employee.setEmployeeID(rs.getInt("EmployeeID"));
