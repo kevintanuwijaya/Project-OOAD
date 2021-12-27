@@ -39,7 +39,8 @@ public class ViewEmployeeForm extends JFrame {
     private JTable table;
     private DefaultTableModel dtm;
     private JScrollPane scrollPane;
-    private JButton addButton, updateButton, fireButton, clearButton;
+    private JButton addButton, updateButton, fireButton, clearButton, backButton;
+    private Employee employee = MainMenu.currentEmployee; 
 
     ButtonGroup roleRB;
     private JRadioButton adminRb, pharmacistRb, doctorRb, nurseRb, humanResourceRb;
@@ -191,6 +192,7 @@ public class ViewEmployeeForm extends JFrame {
         updateButton = new JButton("Update");
         clearButton = new JButton("Clear Field");
         fireButton = new JButton("Fire");
+        backButton = new JButton("Back To Menu");
         // searchButton = new JButton("Search");
     }
 
@@ -243,6 +245,7 @@ public class ViewEmployeeForm extends JFrame {
         bottomPanel.add(updateButton);
         bottomPanel.add(clearButton);
         bottomPanel.add(fireButton);
+        bottomPanel.add(backButton);
         // bottomPanel.add(searchButton);
 
         add(topPanel, BorderLayout.NORTH);
@@ -364,11 +367,7 @@ public class ViewEmployeeForm extends JFrame {
 				empName.setText("");
 				empSalary.setText("");
 
-                adminRb.setSelected(false);
-                pharmacistRb.setSelected(false);
-                doctorRb.setSelected(false);
-                nurseRb.setSelected(false);
-                humanResourceRb.setSelected(false);
+                roleRB.clearSelection();
 
                 loadData();
 			}
@@ -387,6 +386,16 @@ public class ViewEmployeeForm extends JFrame {
             }
 
         });
+
+        backButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {			
+				new MainMenu(employee);
+				dispose();
+				
+			}
+		});
     }
 
     private void loadData() {
