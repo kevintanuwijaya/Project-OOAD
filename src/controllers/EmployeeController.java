@@ -2,6 +2,8 @@ package controllers;
 
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import models.Employee;
 
 public class EmployeeController {
@@ -38,6 +40,14 @@ public class EmployeeController {
 	public Employee AddEmployee(String name, String username, int roleID, int salary, String password) {
 		
 		//validation
+
+		if (name.equals("")) {
+			JOptionPane.showMessageDialog(null, "Nama harus diisi");
+			return null;
+		} else if (username.equals("")) {
+			JOptionPane.showMessageDialog(null, "Username harus diisi");
+			return null;
+		}
 		
 		Employee employee = new Employee();
 		

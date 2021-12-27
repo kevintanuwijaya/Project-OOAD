@@ -17,6 +17,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -38,7 +39,7 @@ public class ViewEmployeeForm extends JFrame {
     private JTable table;
     private DefaultTableModel dtm;
     private JScrollPane scrollPane;
-    private JButton addButton, updateButton, fireButton;
+    private JButton addButton, updateButton, fireButton, clearButton;
 
     ButtonGroup roleRB;
     private JRadioButton adminRb, pharmacistRb, doctorRb, nurseRb, humanResourceRb;
@@ -188,6 +189,7 @@ public class ViewEmployeeForm extends JFrame {
 
         addButton = new JButton("Add");
         updateButton = new JButton("Update");
+        clearButton = new JButton("Clear Field");
         fireButton = new JButton("Fire");
         // searchButton = new JButton("Search");
     }
@@ -239,6 +241,7 @@ public class ViewEmployeeForm extends JFrame {
         /* Bottom Panel */
         bottomPanel.add(addButton);
         bottomPanel.add(updateButton);
+        bottomPanel.add(clearButton);
         bottomPanel.add(fireButton);
         // bottomPanel.add(searchButton);
 
@@ -281,6 +284,10 @@ public class ViewEmployeeForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
 
+                if (empSalary.getText().isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Salary tidak boleh kosong");
+                }
+
                 // int employeeID = Integer.parseInt(empId.getText());
                 String username = empUsername.getText();
                 String name = empName.getText();
@@ -289,6 +296,8 @@ public class ViewEmployeeForm extends JFrame {
                 int salary = Integer.parseInt(empSalary.getText());
                 String password = "asdasd";
                 // String status = empStatus.getText();
+
+                
 
                 if (adminRb.isSelected()) {
                     roleID = 1;
@@ -300,6 +309,8 @@ public class ViewEmployeeForm extends JFrame {
                     roleID = 4;
                 } else if (humanResourceRb.isSelected()) {
                     roleID = 5;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Harus Pilih Role");
                 }
                 System.out.println(username + " " + name + " " + roleID + " " + salary + "\n");
 
@@ -342,6 +353,26 @@ public class ViewEmployeeForm extends JFrame {
             }
 
         });
+
+        clearButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				empId.setText("");
+				empUsername.setText("");
+				empName.setText("");
+				empSalary.setText("");
+
+                adminRb.setSelected(false);
+                pharmacistRb.setSelected(false);
+                doctorRb.setSelected(false);
+                nurseRb.setSelected(false);
+                humanResourceRb.setSelected(false);
+
+                loadData();
+			}
+		});
 
         fireButton.addActionListener(new ActionListener() {
 
