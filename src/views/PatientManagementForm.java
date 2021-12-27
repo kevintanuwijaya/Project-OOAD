@@ -240,6 +240,7 @@ public class PatientManagementForm extends JFrame{
 			formPanel.add(DOBPanel);
 	
 			southPanel.add(insertBtn);
+			southPanel.add(updateBtn);
 		}else
 			if(employee.getRoleID() == 3 || employee.getRoleID() == 4) {
 				tablePanel.add(patientDetailScrollPane);

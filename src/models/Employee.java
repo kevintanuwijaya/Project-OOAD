@@ -280,7 +280,7 @@ public class Employee {
         String role = "Doctor";
         List<Employee> employees = new Vector<Employee>();
 		
-		String sqlQuery = "SELECT * FROM employee E JOIN role R ON R.RoleID = E.RoleID WHERE R.Name = ?";
+		String sqlQuery = "SELECT * FROM employee E JOIN role R ON R.RoleID = E.RoleID WHERE R.Name = ? AND E.Status LIKE 'Active'";
 		
 		try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
