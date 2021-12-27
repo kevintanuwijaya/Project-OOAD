@@ -1,6 +1,7 @@
 package models;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
@@ -86,11 +87,33 @@ public class BillDetail {
 	
 	public List<BillDetail> GetAllBillDetail(int billID){
 		
-		List<BillDetail> allBillDetails = new Vector<BillDetail>();
+Connection conn = DatabaseConnection.getInstance().getConnection();
 		
-		//get all bill details by BillID from database
-		
-		return allBillDetails; 
+		List<BillDetail> billDetailList = new Vector<>();
+
+        String sqlQuery = "SELECT * FROM billdetail WHERE BillID = ?";
+
+        try {
+            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+            
+            stat.setInt(1, billID);
+
+            ResultSet result = stat.executeQuery();
+
+            while (result.next()) {
+                BillDetail bilDetail = new BillDetail();
+                bilDetail.setBillID(result.getInt("BillID"));
+                bilDetail.setBillDetailID((result.getInt("BillDetailID")));
+                bilDetail.setMedicineID(result.getInt("MedicineID"));
+                bilDetail.setQuantity(result.getInt("Quantity"));
+
+                billDetailList.add(bilDetail);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return billDetailList;
 	}
 	
 }

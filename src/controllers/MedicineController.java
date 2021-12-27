@@ -3,6 +3,8 @@ package controllers;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import models.Medicine;
 
 public class MedicineController {
@@ -32,41 +34,57 @@ public class MedicineController {
 		return allMedicines;
 	}
 
-	public Medicine addMedicine(String name, int price, int stock) {
+	public Medicine addMedicine(String name, String price, String stock) {
 
-		// validation
+		if (name.equals("")) {
+			JOptionPane.showMessageDialog(null, "Nama harus diisi");
+			return null;
+		} else if (price.equals("")) {
+			JOptionPane.showMessageDialog(null, "Harga harus diisi");
+			return null;
+		} else if (stock.equals("")) {
+			JOptionPane.showMessageDialog(null, "Stock harus diisi");
+			return null;
+		}
 
 		Medicine medicine = new Medicine();
 
 		medicine.setName(name);
-		medicine.setPrice(price);
-		medicine.setStock(stock);
+		medicine.setPrice(Integer.parseInt(price));
+		medicine.setStock(Integer.parseInt(stock));
 		medicine.insertMedicine();
 
 		return medicine;
 	}
 
-	public Medicine updateMedicine(int id, String name, int price, int stock) {
+	public Medicine updateMedicine(String id, String name, String price, String stock) {
 
-		// validation
+		if (name.equals("")) {
+			JOptionPane.showMessageDialog(null, "Nama harus diisi");
+			return null;
+		} else if (price.equals("")) {
+			JOptionPane.showMessageDialog(null, "Harga harus diisi");
+			return null;
+		} else if (stock.equals("")) {
+			JOptionPane.showMessageDialog(null, "Stock harus diisi");
+			return null;
+		}
 		Medicine medicine = new Medicine();
-		medicine = medicine.getMedicine(id);
+		medicine = medicine.getMedicine(Integer.parseInt(id));
 
 		medicine.setName(name);
-		medicine.setPrice(price);
-		medicine.setStock(stock);
+		medicine.setPrice(Integer.parseInt(price));
+		medicine.setStock(Integer.parseInt(stock));
 		medicine.updateMedicine();
 
 		return medicine;
 	}
 
-	public Medicine deleteMedicine(int medicineID) {
-
-		// validation
+	public Medicine deleteMedicine(String medicineID) {
 
 		Medicine medicine = new Medicine();
 
-		medicine = medicine.getMedicine(medicineID);
+		medicine = medicine.getMedicine(Integer.parseInt(medicineID));
 		medicine.deleteMedicine();
 
 		return medicine;

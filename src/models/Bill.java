@@ -106,12 +106,36 @@ public class Bill {
         return bill;
 	}
 	
-	public Bill SearchBill(int patientID){
-		
-		//get Bill data by patientID from database
-		//set all attribute from database to this class
-		
-		return this;
+	public List<Bill> searchBill(int patientID) {
+		List<Bill> foundBill = new Vector<>();
+	    Connection conn = DatabaseConnection.getInstance().getConnection();
+
+	    String sqlQuery = "SELECT * FROM bill WHERE PatientID = ?";
+	    
+
+	    try {
+	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+	        stat.setInt(1, patientID);
+
+	        ResultSet result = stat.executeQuery();
+
+	        while (result.next()) {
+	        	Bill bil = new Bill();
+	            bil.setBillID(result.getInt("BillID"));
+	            bil.setEmployeeID(result.getInt("EmployeeID"));
+	            bil.setPatientID(result.getInt("PatientID"));
+	            bil.setDateTimeCreated(result.getDate("DatetimeCreated"));
+	            bil.setPaymentType(result.getString("PaymentType"));
+	            bil.setStatus(result.getString("Status"));
+
+	            foundBill.add(bil);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return foundBill;
 	}
 	
 	public Bill GetBill(int billID) {
@@ -131,7 +155,7 @@ public class Bill {
 		
 		Connection conn = DatabaseConnection.getInstance().getConnection();
         
-        String sqlQuery = "INSERT INTO bill(EmployeeID, PatientID, DateTimeCreated, PaymentType) VALUES(?, ?, ?, ?);";
+        String sqlQuery = "INSERT INTO bill(EmployeeID, PatientID, DateTimeCreated, PaymentType, Status) VALUES(?, ?, ?, ?, ?);";
 
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
@@ -139,6 +163,7 @@ public class Bill {
             stat.setInt(2, getPatientID());
             stat.setDate(3, getDateTimeCreated());
             stat.setString(4, getPaymentType());
+            stat.setString(5, getStatus());
 
             int result = stat.executeUpdate();
 
@@ -155,14 +180,17 @@ public class Bill {
 		
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 		
-		String sqlQuery = "UPDATE bill SET EmployeeID = ?, PatientID = ?, DateTimeCreated = ?, PaymentType = ? WHERE BillID = ?;";
+		String sqlQuery = "UPDATE bill SET EmployeeID = ?, PatientID = ?, PaymentType = ?, Status = ? WHERE BillID = ?;";
 
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
             stat.setInt(1, getEmployeeID());
             stat.setInt(2, getPatientID());
-            stat.setDate(3, getDateTimeCreated());
-            stat.setString(4, getPaymentType());
+            stat.setString(3, getPaymentType());
+            stat.setString(4, getStatus());
+            stat.setInt(5, getBillID());
+            
+            System.out.println("masuk");
 
             int result = stat.executeUpdate();
 

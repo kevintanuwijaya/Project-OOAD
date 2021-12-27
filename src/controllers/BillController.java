@@ -1,6 +1,8 @@
 package controllers;
 
-import java.sql.Date;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -28,7 +30,7 @@ public class BillController {
 		return BillController.instance;
 	}
 
-public List<Bill> GetAllBill(){
+	public List<Bill> GetAllBill(){
 		
 		Bill bill = new Bill();
 		
@@ -38,15 +40,15 @@ public List<Bill> GetAllBill(){
 	}
 	
 	
-	public Bill SearchBill(int patientID){
-		
+	public List<Bill> SearchBill(int patientID){
+	
 		//validation
-		
+	
+		List<Bill> allBill = new Vector<>();
 		Bill bill = new Bill();
+		allBill = bill.searchBill(patientID);
 		
-		Bill selectedBills = bill.SearchBill(patientID);
-		
-		return selectedBills;
+		return allBill;
 	}
 	
 	
@@ -59,18 +61,32 @@ public List<Bill> GetAllBill(){
 		return bill.GetBill(billID);
 	}
 	
-	public Bill AddBill(int billID, int employeeID, int patientID, Date date, String paymentType, String status) {
+	public Bill AddBill(int employeeID, int patientID, String paymentType, String status) {
 		
 		//validation
+		Date currentDate = new Date();
+		java.sql.Date date = new java.sql.Date(currentDate.getTime());
 		
 		Bill bill = new Bill();
-		
-		bill.setBillID(billID);
 		bill.setEmployeeID(employeeID);
 		bill.setPatientID(patientID);
 		bill.setDateTimeCreated(date);
 		bill.setPaymentType(paymentType);
 		bill.setStatus(status);
+		bill.AddBill();
+		
+		return bill;
+	}
+	
+	public Bill UpdateBill(int billID, int employeeID, int patientID, String paymentType, String status) {
+		
+		Bill bill = new Bill();
+		bill.setBillID(billID);
+		bill.setEmployeeID(employeeID);
+		bill.setPatientID(patientID);
+		bill.setPaymentType(paymentType);
+		bill.setStatus(status);
+		bill.UpdateBill();
 		
 		return bill;
 	}
@@ -81,7 +97,6 @@ public List<Bill> GetAllBill(){
 		//validation
 		
 		BillDetail billDetail = new BillDetail();
-		java.util.Date currentDate = new java.util.Date();
 		
 		billDetail.setBillID(billID);
 		billDetail.setMedicineID(medicineID);
@@ -90,6 +105,7 @@ public List<Bill> GetAllBill(){
 		
 		return billDetail;
 	}
+	
 	public List<BillDetail> getAllBillDetail(int billID){
 		BillDetail billDetail = new BillDetail();
 		List<BillDetail> listAllBillDetail = billDetail.GetAllBillDetail(billID);
