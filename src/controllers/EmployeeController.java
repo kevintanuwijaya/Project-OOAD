@@ -48,8 +48,11 @@ public class EmployeeController {
 		} else if (username.equals("")) {
 			JOptionPane.showMessageDialog(null, "Username harus diisi");
 			return null;
-		} else if (username.equals("")) {
-			JOptionPane.showMessageDialog(null, "Username harus diisi");
+		} else if (salary.equals("")) {
+			JOptionPane.showMessageDialog(null, "Salary harus diisi");
+			return null;
+		} else if (password.equals("")) {
+			JOptionPane.showMessageDialog(null, "Password harus diisi");
 			return null;
 		}
 		
@@ -59,32 +62,39 @@ public class EmployeeController {
 		employee.setUsername(username);
 		employee.setRoleID(roleID);
 		employee.setSalary(salaryInt);
-		employee.setPassword("asdasd");
+		employee.setPassword(password);
 		employee.setStatus("Active");
 		employee.InsertEmployee();
 		
 		return employee;
 	}
 	
-	public Employee UpdateEmployee(int employeeID, String name, String username, int role, String password, String salary) {
+	public Employee UpdateEmployee(String employeeID, String name, String username, int role, String password, String salary) {
 		
 		//validation
+		int employeeIDInt = Integer.parseInt(employeeID);
 		int salaryInt = Integer.parseInt(salary);
-
-		if (name.equals("")) {
+		
+		if (employeeID.equals("")) {
+			JOptionPane.showMessageDialog(null, "Pilih List pada Table untuk dapatkan ID");
+			return null;
+		} else if (name.equals("")) {
 			JOptionPane.showMessageDialog(null, "Nama harus diisi");
 			return null;
 		} else if (username.equals("")) {
 			JOptionPane.showMessageDialog(null, "Username harus diisi");
 			return null;
 		} else if (username.equals("")) {
-			JOptionPane.showMessageDialog(null, "Username harus diisi");
+			JOptionPane.showMessageDialog(null, "Salary harus diisi");
+			return null;
+		} else if (password.equals("")) {
+			JOptionPane.showMessageDialog(null, "Password harus diisi");
 			return null;
 		}
 		
 		Employee employee = new Employee();
 		
-		employee = employee.GetEmployee(employeeID);
+		employee = employee.GetEmployee(employeeIDInt);
 
 		employee.setName(name);
 		employee.setUsername(username);

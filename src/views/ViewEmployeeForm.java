@@ -230,7 +230,7 @@ public class ViewEmployeeForm extends JFrame {
         formPanel.add(idPanel);
         formPanel.add(usernamePanel);
         formPanel.add(namePanel);
-        // formPanel.add(passwordPanel);
+        formPanel.add(passwordPanel);
         formPanel.add(rolePanel);
         formPanel.add(salaryPanel);
         // formPanel.add(statusPanel);
@@ -329,7 +329,7 @@ public class ViewEmployeeForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                int employeeID = Integer.parseInt(empId.getText());
+                String employeeID = empId.getText();
                 String username = empUsername.getText();
                 String name = empName.getText();
                 String password = empPassword.getText();
