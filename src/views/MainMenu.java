@@ -79,6 +79,7 @@ public class MainMenu extends JFrame {
 			centerPanel.add(btnDoctorView);
 		}else
 			if(currentEmployee.getRoleID() == 2) {
+				centerPanel.add(btnBillManagement);
 				centerPanel.add(btnMedManagement);
 			}else
 				if(currentEmployee.getRoleID() == 3) {
@@ -107,7 +108,8 @@ public class MainMenu extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				new BillManagementForm();
+				dispose();
 			}
 		});
 		
