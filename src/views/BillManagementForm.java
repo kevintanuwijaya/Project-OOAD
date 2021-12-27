@@ -422,6 +422,7 @@ public class BillManagementForm extends JFrame {
         bottomPanel.add(addButton);
         bottomPanel.add(updateButton);
         bottomPanel.add(searchButton);
+        
         bottomPanel.add(insertDetailButton);
         bottomPanel.add(checkoutButton);
         bottomPanel.add(clearFieldButton);
