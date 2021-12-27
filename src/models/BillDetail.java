@@ -60,16 +60,15 @@ public class BillDetail {
 		
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 		
-        String sqlQuery = "INSERT INTO billdetail(BillDetailID, BillID, MedicineID, Quantity) VALUES(?, ?, ?, ?);";
+        String sqlQuery = "INSERT INTO billdetail (BillID, MedicineID, Quantity) VALUES (?, ?, ?);";
 
         // Statement -> Object yang dipake buat execute
         // static SQL statement
         try {
             PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setInt(1,  getBillDetailID());
-            stat.setInt(2, getBillDetailID());
-            stat.setInt(3, getMedicineID());
-            stat.setInt(4, getQuantity());
+            stat.setInt(1, getBillID());
+            stat.setInt(2, getMedicineID());
+            stat.setInt(3, getQuantity());
 
             // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
             // stat.executeQuery() -> return table dalam bentuk ResultSet

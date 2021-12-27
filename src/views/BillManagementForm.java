@@ -16,6 +16,7 @@ import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.RowSorterEvent;
 import javax.swing.table.DefaultTableModel;
+import static javax.swing.ScrollPaneConstants.*;
 
 import controllers.BillController;
 import controllers.EmployeeController;
@@ -37,13 +39,16 @@ import models.Medicine;
 import models.Patient;
 
 public class BillManagementForm extends JFrame {
-	private JPanel topPanel, centerPanel, bottomPanel, empNamePanel, patientNamePanel, createdDatePanel, paymentTypePanel, statusPanel, formPanel, searchPanel, idPanel;
-    private JLabel title, empNameLabel, patientNameLabel, createdDateLabel, paymentTypeLabel, statusLabel, searchLabel, idLabel;
-    private JTextField empName, patientName, createdDate, paymentType, status, searchBill, id;
+	private JPanel topPanel, centerPanel, bottomPanel, empNamePanel, patientNamePanel, createdDatePanel, paymentTypePanel, formPanel, searchPanel, idPanel, tablePanel, medicineIDPanel, quantityPanel;
+    private JLabel title, empNameLabel, patientNameLabel, createdDateLabel, paymentTypeLabel, searchLabel, idLabel, medicineIDLabel, quantityLabel;
+    private JTextField empName, patientName, createdDate, paymentType, searchBill, id,  medicineID, quantity;
     private JTable table, billDetailTable;
     private DefaultTableModel dtm;
-    private JScrollPane scrollPane, detailScrollPane;
-    private JButton addButton, updateButton, searchButton, backButton;
+    private JScrollPane scrollPane, detailScrollPane, formScrollPanel;
+    private JButton addButton, updateButton, searchButton, backButton, insertDetailButton, clearFieldButton, checkoutButton;
+    private JComboBox<String> paymentCombo;
+    private JComboBox<Employee> employeeCombo;
+    private JComboBox<Patient> patientCombo;
     
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -51,6 +56,9 @@ public class BillManagementForm extends JFrame {
     private Vector<String> columnDetailName;
     private Vector<String> dataDummy;
     private Vector<String> row;
+    private Vector<Employee> employeeList;
+    private Vector<Patient> patientList;
+    
     
     private Employee currentEmployee = MainMenu.currentEmployee;
 	
@@ -83,14 +91,7 @@ public class BillManagementForm extends JFrame {
         columnDetailName.add("Quantity");
 
         // TODO Data dummy, nanti harus diganti pake data yang diambil dari data access
-        dataDummy = new Vector<>();
-        dataDummy.add("1");
-        dataDummy.add("Steven Santoso");
-        dataDummy.add("Marcellino");
-        dataDummy.add("12-12-2012");
-        dataDummy.add("Credit");
-        dataDummy.add("Paid");
-
+        tablePanel = new JPanel();
         table = new JTable() {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -120,8 +121,9 @@ public class BillManagementForm extends JFrame {
         billDetailTable.getTableHeader().setReorderingAllowed(false);
 
         scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(((int)screenSize.getWidth()-300)/2, 400));
         detailScrollPane = new JScrollPane(billDetailTable);
-        
+        detailScrollPane.setPreferredSize(new Dimension(((int)screenSize.getWidth()-300)/2, 400));
 
         /* For Form Panel */
         formPanel = new JPanel();
@@ -142,9 +144,12 @@ public class BillManagementForm extends JFrame {
         paymentTypeLabel = new JLabel("Payment Type");
         paymentTypeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         paymentTypeLabel.setPreferredSize(new Dimension(150, 25));
-        statusLabel = new JLabel("Status");
-        statusLabel.setFont(new Font("Status", Font.PLAIN, 20));
-        statusLabel.setPreferredSize(new Dimension(150, 25));
+        medicineIDLabel = new JLabel("Medicine ID");
+        medicineIDLabel.setFont(new Font("Status", Font.PLAIN, 20));
+        medicineIDLabel.setPreferredSize(new Dimension(150, 25));
+        quantityLabel = new JLabel("Quantity");
+        quantityLabel.setFont(new Font("Status", Font.PLAIN, 20));
+        quantityLabel.setPreferredSize(new Dimension(150, 25));
         
         id = new JTextField();
         id.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
@@ -155,10 +160,33 @@ public class BillManagementForm extends JFrame {
         empName.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
         patientName = new JTextField();
         patientName.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
-        paymentType = new JTextField();
-        paymentType.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
-        status = new JTextField();
-        status.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+//        paymentType = new JTextField();
+//        paymentType.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+        
+        Vector<String> paymentType = new Vector<>();
+        paymentType.add("Cash");
+        paymentType.add("Credit");
+        paymentCombo = new JComboBox<>((Vector) paymentType);
+        paymentCombo.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+        paymentCombo.setSelectedIndex(-1);
+        List<Employee> employeeList = new Vector<>();
+        EmployeeController empControl = EmployeeController.getInstance();
+        employeeList = empControl.GetAllEmployee();
+        employeeCombo = new JComboBox<>((Vector) employeeList);
+        employeeCombo.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+        employeeCombo.setSelectedIndex(-1);
+        List<Patient> patientList = new Vector<>();
+        PatientController patControl = PatientController.getInstance();
+        patientList = patControl.GetAllPatient();
+        patientCombo = new JComboBox<>((Vector) patientList);
+        patientCombo.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+        patientCombo.setSelectedIndex(-1);
+        medicineID = new JTextField();
+        medicineID.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+        medicineID.setEditable(false);
+        quantity = new JTextField();
+        quantity.setPreferredSize(new Dimension((int) screenSize.getWidth() - 300, 25));
+        quantity.setEditable(false);
 
         idPanel = new JPanel();
         idPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -175,16 +203,23 @@ public class BillManagementForm extends JFrame {
         paymentTypePanel = new JPanel();
         paymentTypePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         paymentTypePanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 25));
-        statusPanel = new JPanel();
-        statusPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        statusPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 25));
+        medicineIDPanel = new JPanel();
+        medicineIDPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        medicineIDPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 25));
+        quantityPanel = new JPanel();
+        quantityPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        quantityPanel.setPreferredSize(new Dimension((int) screenSize.getWidth(), 25));
+        
 
         /* For Bottom Panel */
         bottomPanel = new JPanel();
 
-        addButton = new JButton("Add");
-        updateButton = new JButton("Update");
-        searchButton = new JButton("Search");
+        addButton = new JButton("Add Bill");
+        updateButton = new JButton("Update Bill");
+        searchButton = new JButton("Search Bill");
+        insertDetailButton = new JButton("Insert Bill Detail");
+        clearFieldButton = new JButton("Clear Field");
+        checkoutButton = new JButton("Checkout");
         backButton = new JButton("Back");
         
         
@@ -201,10 +236,17 @@ public class BillManagementForm extends JFrame {
                 loadDetailData(Integer.parseInt(table.getValueAt(row, 0).toString()));
                 id.setText(table.getValueAt(row, 0).toString());
                 int selectedBillID = Integer.parseInt(table.getValueAt(row, 0).toString());
-                empName.setText(Integer.toString(billControl.GetBill(selectedBillID).getEmployeeID()));
-                patientName.setText(Integer.toString(billControl.GetBill(selectedBillID).getPatientID()));
-                paymentType.setText(table.getValueAt(row, 3).toString());
-                status.setText(table.getValueAt(row, 4).toString());
+                employeeCombo.setSelectedIndex(billControl.GetBill(Integer.parseInt(table.getValueAt(row, 0).toString())).getEmployeeID()-1);
+                patientCombo.setSelectedIndex(billControl.GetBill(Integer.parseInt(table.getValueAt(row, 0).toString())).getPatientID()-1);
+                if(table.getValueAt(row, 3).toString().equals("Cash")) {
+                	paymentCombo.setSelectedIndex(0);
+                }
+                else {
+                	paymentCombo.setSelectedIndex(1);
+                }
+//                paymentType.setText(table.getValueAt(row, 3).toString());
+                medicineID.setEditable(true);
+                quantity.setEditable(true);
             }
 
         });
@@ -213,13 +255,21 @@ public class BillManagementForm extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                int newEmpID = Integer.parseInt(empName.getText());
-                int newPatientID = Integer.parseInt(patientName.getText()) ;
-                String newPaymentType = paymentType.getText();
-                String newStatus = status.getText();
-
+            	EmployeeController empControl = EmployeeController.getInstance();
+                final List<Employee> employeeList = empControl.GetAllEmployee();
+                PatientController patControl = PatientController.getInstance();
+                final List<Patient> patientList = patControl.GetAllPatient();
+                int newEmpID = employeeList.get(employeeCombo.getSelectedIndex()).getEmployeeID();
+                int newPatientID = patientList.get(patientCombo.getSelectedIndex()).getPatientID();
+                String newPaymentType = "";
+                if(paymentCombo.getSelectedIndex() == 1) {
+                	newPaymentType = "Cash";
+                }
+                else {
+                	newPaymentType = "Credit";
+                }
                 BillController billController = BillController.getInstance();
-                billController.AddBill(newEmpID, newPatientID, newPaymentType, newStatus);
+                billController.AddBill(newEmpID, newPatientID, newPaymentType);
                 loadData();
             }
         });
@@ -230,12 +280,17 @@ public class BillManagementForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	int newEmpID = Integer.parseInt(empName.getText());
                 int newPatientID = Integer.parseInt(patientName.getText()) ;
-                String newPaymentType = paymentType.getText();
-                String newStatus = status.getText();
+                String newPaymentType = "";
                 int billID = Integer.parseInt(id.getText());
+                if(paymentCombo.getSelectedIndex() == 1) {
+                	newPaymentType = "Cash";
+                }
+                else {
+                	newPaymentType = "Credit";
+                }
 
                 BillController billController = BillController.getInstance();
-                billController.UpdateBill(billID, newEmpID, newPatientID, newPaymentType, newStatus);
+                billController.UpdateBill(billID, newEmpID, newPatientID, newPaymentType);
                 loadData();
             }
         });
@@ -252,6 +307,61 @@ public class BillManagementForm extends JFrame {
                 loadData(foundBill);
             }
         });
+        
+        insertDetailButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int billID = Integer.parseInt(id.getText());
+				int medID = Integer.parseInt(medicineID.getText());
+				int qty = Integer.parseInt(quantity.getText());
+				
+				BillController billController = BillController.getInstance();
+				System.out.println(billID);
+				System.out.println(medID);
+				System.out.println(qty);
+				billController.AddBillDetail(billID, medID, qty);
+				loadData();
+				loadDetailData(billID);
+				
+				
+			}
+		});
+        
+        checkoutButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int newEmpID = Integer.parseInt(empName.getText());
+                int newPatientID = Integer.parseInt(patientName.getText()) ;
+               
+                int billID = Integer.parseInt(id.getText());
+
+                BillController billController = BillController.getInstance();
+//                billController.UpdateBill(billID, newEmpID, newPatientID, newPaymentType);
+                loadData();
+				
+			}
+		});
+        
+        clearFieldButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				id.setText("");
+				searchBill.setText("");
+				employeeCombo.setSelectedIndex(-1);
+				patientCombo.setSelectedIndex(-1);
+				paymentCombo.setSelectedIndex(-1);
+				medicineID.setText("");
+				medicineID.setEditable(false);
+				quantity.setText("");
+				quantity.setEditable(false);
+				billDetailTable.setModel(new DefaultTableModel());
+				loadData();
+				
+			}
+		});
         
         backButton.addActionListener(new ActionListener() {
 			
@@ -276,34 +386,45 @@ public class BillManagementForm extends JFrame {
         searchPanel.add(searchBill);
         
         empNamePanel.add(empNameLabel);
-        empNamePanel.add(empName);
+        empNamePanel.add(employeeCombo);
 
         patientNamePanel.add(patientNameLabel);
-        patientNamePanel.add(patientName);
+        patientNamePanel.add(patientCombo);
         
         paymentTypePanel.add(paymentTypeLabel);
-        paymentTypePanel.add(paymentType);
+        paymentTypePanel.add(paymentCombo);
         
-        statusPanel.add(statusLabel);
-        statusPanel.add(status);
+        medicineIDPanel.add(medicineIDLabel);
+        medicineIDPanel.add(medicineID);
+        
+        quantityPanel.add(quantityLabel);
+        quantityPanel.add(quantity);
+        
 
         formPanel.add(idPanel);
         formPanel.add(searchPanel);
         formPanel.add(empNamePanel);
         formPanel.add(patientNamePanel);
         formPanel.add(paymentTypePanel);
-        formPanel.add(statusPanel);
+        formPanel.add(medicineIDPanel);
+        formPanel.add(quantityPanel);
         formPanel.setBorder(new EmptyBorder(25, 25, 25, 25));
+        formScrollPanel = new JScrollPane(formPanel);
+        formScrollPanel.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
 
-        centerPanel.add(scrollPane);
-        centerPanel.add(detailScrollPane);
-        centerPanel.add(formPanel);
+        tablePanel.add(scrollPane);
+        tablePanel.add(detailScrollPane);
+        centerPanel.add(tablePanel);
+        centerPanel.add(formScrollPanel);
         centerPanel.setBorder(new EmptyBorder(25, 25, 25, 25));
-
+        
         /* Bottom Panel */
         bottomPanel.add(addButton);
         bottomPanel.add(updateButton);
         bottomPanel.add(searchButton);
+        bottomPanel.add(insertDetailButton);
+        bottomPanel.add(checkoutButton);
+        bottomPanel.add(clearFieldButton);
         bottomPanel.add(backButton);
 
         add(topPanel, BorderLayout.NORTH);
@@ -380,6 +501,13 @@ public class BillManagementForm extends JFrame {
         	dtm.addRow(row);
         }
     	
+
+        billDetailTable.setModel(dtm);
+    }
+    
+    private void clearDetailData() {
+    	Object[] header = { "Bill Detail ID", "Bill ID", "Medicine ID", "Quantity" };
+        dtm = new DefaultTableModel(header, 0);	
 
         billDetailTable.setModel(dtm);
     }

@@ -47,6 +47,12 @@ public class Patient {
 		DOB = dOB;
 	}
 	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return Name;
+	}
+	
 	/*
 	 * Add Patient into Database
 	 */
