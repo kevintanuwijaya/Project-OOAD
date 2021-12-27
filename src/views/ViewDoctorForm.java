@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -13,11 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.RowSorterEvent;
 import javax.swing.table.DefaultTableModel;
 
+import controllers.EmployeeController;
 import models.Employee;
 
 public class ViewDoctorForm extends JFrame{
@@ -28,6 +31,7 @@ public class ViewDoctorForm extends JFrame{
 	private DefaultTableModel dtm;
 	private JButton backBtn;
 	private JScrollPane scrollTable;
+	private Employee employee = MainMenu.currentEmployee;
 	
 	private void initItem() {
 
@@ -62,7 +66,6 @@ public class ViewDoctorForm extends JFrame{
 			
 		};
 
-		
 		backBtn = new JButton("Back To Menu");
 		
 	}
@@ -83,7 +86,15 @@ public class ViewDoctorForm extends JFrame{
 	
 	private void setListener() 
 	{
-		
+		backBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new MainMenu(employee);
+				dispose();
+			}
+			
+		});
 		
 	}
 	
@@ -92,23 +103,15 @@ public class ViewDoctorForm extends JFrame{
 		Object[] header = {"Employee ID","Doctor Name","Status"};
 		dtm = new DefaultTableModel(header,0);
 		
-//		Vector<Employee> employees = 
+		List<Employee> doctorList = EmployeeController.getInstance().GetDoctorList();
 		
-//		for (Item item : items) {
-//			Vector<Object> row = new Vector<Object>();
-//			row.add(item.getName());
-//			row.add(item.getRak());
-//			row.add(item.getStockRemain());
-//			row.add(item.getQuantityType());
-//			
-//			dtm.addRow(row);
-//		}
-		
-//		Vector<String> data = new Vector<String>();
-//		data.add("Kevin");
-//		
-//		
-//		dtm.addRow(data);
+		for (Employee employee : doctorList) {
+			Vector<Object> row = new Vector<Object>();
+			row.add(employee.getEmployeeID());
+			row.add(employee.getName());
+			row.add(employee.getStatus());
+			dtm.addRow(row);
+		}
 		
 		DoctorTable.setModel(dtm);	
 	}
