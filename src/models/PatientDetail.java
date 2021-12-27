@@ -63,8 +63,9 @@ public class PatientDetail {
 		CheckDate = checkDate;
 	}
 	
-	/*
-	 * Get all patient detail by PatientID
+	/**
+	 * @param patientID
+	 * @return Get all patient detail by PatientID
 	 */
 	public List<PatientDetail> GetAllPatientDetail(int patientID){
 		
@@ -99,10 +100,15 @@ public class PatientDetail {
 		return patientDetails;
 	}
 	
+	
+	/**
+	 * 
+	 * @return Insert new patientdetail to database
+	 */
 	public PatientDetail AddPatientDetail() {
 			
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-		String sqlQuery = "INSERT INTO patientdetail VALUES (?,?,?,?)";
+		String sqlQuery = "INSERT INTO patientdetail (PatientID, EmployeeID, Symptom, CheckDate) VALUES (?,?,?,?)";
 		
 		try {
 	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);

@@ -23,7 +23,7 @@ public class MainMenu extends JFrame {
 	
 	private JPanel topPanel, centerPanel, mainPanel;
 	private JLabel title, welcome;
-	private JButton BtnEmpManagement, btnBillManagement, btnMedManagement, btnPatientManagement, btnDoctorView;
+	private JButton BtnEmpManagement, btnBillManagement, btnMedManagement, btnPatientManagement, btnDoctorView,btnLogout;
 	
 	public static Employee currentEmployee;
 	
@@ -63,6 +63,9 @@ public class MainMenu extends JFrame {
         btnDoctorView = new JButton("View Doctor");
         btnDoctorView.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         btnDoctorView.setPreferredSize(new Dimension(300,50));
+        btnLogout = new JButton("Logout");
+        btnLogout.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        btnLogout.setPreferredSize(new Dimension(300,50));
         
 	}
 	
@@ -76,6 +79,7 @@ public class MainMenu extends JFrame {
 			centerPanel.add(btnDoctorView);
 		}else
 			if(currentEmployee.getRoleID() == 2) {
+				centerPanel.add(btnBillManagement);
 				centerPanel.add(btnMedManagement);
 			}else
 				if(currentEmployee.getRoleID() == 3) {
@@ -89,15 +93,13 @@ public class MainMenu extends JFrame {
 							centerPanel.add(BtnEmpManagement);
 						}
 		
+		centerPanel.add(btnLogout);
 		centerPanel.setBorder(new EmptyBorder(100, 100, 100, 100));
 		
 		mainPanel.add(topPanel, BorderLayout.NORTH);
 		mainPanel.add(centerPanel, BorderLayout.CENTER);
 		
-		
-		
 		this.add(mainPanel);
-		
 	}
 	
 	private void setListener() {
@@ -106,7 +108,8 @@ public class MainMenu extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				new BillManagementForm();
+				dispose();
 			}
 		});
 		
@@ -147,6 +150,14 @@ public class MainMenu extends JFrame {
 			}
 		});
 		
+		btnLogout.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new ViewLoginForm();
+				dispose();
+			}
+		});
 	}
 	
 	private void loadData() {

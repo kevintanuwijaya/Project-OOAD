@@ -47,6 +47,7 @@ public class Patient {
 		DOB = dOB;
 	}
 	
+<<<<<<< HEAD
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
@@ -55,6 +56,11 @@ public class Patient {
 	
 	/*
 	 * Add Patient into Database
+=======
+	/**
+	 * 
+	 * @return Add Patient into Database
+>>>>>>> fa818c2262c474b33845ddae31a40ddd270c127a
 	 */
 	
 	public Patient AddPatient() {
@@ -79,8 +85,9 @@ public class Patient {
 		return null;
 	}
 	
-	/*
-	 * Get all Patient from database
+	/**
+	 * 
+	 * @return Get all Patient from database
 	 */
 	
 	public List<Patient> GetAllPatient(){
@@ -114,8 +121,10 @@ public class Patient {
 		return patients;
 	}
 	
-	/*
-	 * Search Patient based on its name
+	/**
+	 * 
+	 * @param name
+	 * @return Search Patient based on its name
 	 */
 	public List<Patient> SearchPatient(String name){
 
@@ -149,8 +158,9 @@ public class Patient {
     	return patients;
 	}
 	
-	/*
-	 * Update patient in database
+	/**
+	 * 
+	 * @return Update patient in database
 	 */
 	public Patient UpdatePatient() {
 			
@@ -177,8 +187,10 @@ public class Patient {
 		return null;
 	}
 	
-	/*
-	 * Get patient by ID
+	/**
+	 * 
+	 * @param patientID
+	 * @return Get patient by ID
 	 */
 	public Patient GetPatient(int patientID) {
 		

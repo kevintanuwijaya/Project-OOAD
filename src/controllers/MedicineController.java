@@ -34,6 +34,14 @@ public class MedicineController {
 		return allMedicines;
 	}
 
+	/**
+	 * Add new medicine
+	 * 
+	 * @param String name
+	 * @param String price
+	 * @param String stock
+	 * @return Medicine
+	 */
 	public Medicine addMedicine(String name, String price, String stock) {
 
 		if (name.equals("")) {
@@ -57,6 +65,15 @@ public class MedicineController {
 		return medicine;
 	}
 
+	/**
+	 * Update existing medicine
+	 * 
+	 * @param String id
+	 * @param String name
+	 * @param String price
+	 * @param String stock
+	 * @return Medicine
+	 */
 	public Medicine updateMedicine(String id, String name, String price, String stock) {
 
 		if (name.equals("")) {
@@ -80,6 +97,12 @@ public class MedicineController {
 		return medicine;
 	}
 
+	/**
+	 * Delete existing medicine
+	 * 
+	 * @param String medicineId
+	 * @return Medicine
+	 */
 	public Medicine deleteMedicine(String medicineID) {
 
 		Medicine medicine = new Medicine();
@@ -90,9 +113,13 @@ public class MedicineController {
 		return medicine;
 	}
 
+	/**
+	 * Search medicine by name
+	 * 
+	 * @param name
+	 * @return List<Medicine>
+	 */
 	public List<Medicine> searchMedicine(String name) {
-
-		// validation
 
 		Medicine medicine = new Medicine();
 
@@ -101,9 +128,13 @@ public class MedicineController {
 		return allMedicines;
 	}
 
+	/**
+	 * Get medicine by id
+	 * 
+	 * @param int medicineID
+	 * @return Medicine
+	 */
 	public Medicine getMedicine(int medicineID) {
-
-		// validation
 
 		Medicine medicine = new Medicine();
 
@@ -112,14 +143,19 @@ public class MedicineController {
 		return medicine;
 	}
 
+	/**
+	 * Decrease medicine stock
+	 * 
+	 * @param int medicineID
+	 * @param int stock
+	 * @return Medicine
+	 */
 	public Medicine decreaseStock(int medicineID, int stock) {
-
-		// validation
 
 		Medicine medicine = new Medicine();
 
 		medicine.getMedicine(medicineID);
-		medicine.setStock(stock);
+		medicine.setStock(medicine.getStock() - stock);
 		medicine.updateMedicine();
 
 		return medicine;
