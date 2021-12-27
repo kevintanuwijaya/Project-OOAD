@@ -33,7 +33,7 @@ import models.Employee;
 
 public class ViewEmployeeForm extends JFrame {
     private JPanel idPanel, topPanel, centerPanel, bottomPanel, usernamePanel, namePanel, rolePanel, salaryPanel,
-            formPanel; // passwordPanel statusPanel
+            formPanel, passwordPanel;
     private JLabel idLabel, title, usernameLabel, nameLabel, passwordLabel, roleLabel, salaryLabel, statusLabel;
     private JTextField empId, empUsername, empName, empPassword, empRole, empSalary, empStatus;
     private JTable table;
@@ -156,8 +156,8 @@ public class ViewEmployeeForm extends JFrame {
         usernamePanel.setLayout(new GridLayout(2, 2, 4, 4));
         namePanel = new JPanel();
         namePanel.setLayout(new GridLayout(2, 2, 4, 4));
-        // passwordPanel = new JPanel();
-        // passwordPanel.setLayout(new GridLayout(2, 2, 4, 4));
+        passwordPanel = new JPanel();
+        passwordPanel.setLayout(new GridLayout(2, 2, 4, 4));
         rolePanel = new JPanel();
         rolePanel.setLayout(new GridLayout(2, 2, 4, 4));
         salaryPanel = new JPanel();
@@ -213,8 +213,8 @@ public class ViewEmployeeForm extends JFrame {
         namePanel.add(nameLabel);
         namePanel.add(empName);
 
-        // passwordPanel.add(passwordLabel);
-        // passwordPanel.add(empPassword);
+        passwordPanel.add(passwordLabel);
+        passwordPanel.add(empPassword);
 
         rolePanel.add(roleLabel);
         // rolePanel.add(empRole);
@@ -296,8 +296,8 @@ public class ViewEmployeeForm extends JFrame {
                 String name = empName.getText();
                 // String password = empPassword.getText();
                 int roleID = 0;
-                int salary = Integer.parseInt(empSalary.getText());
-                String password = "asdasd";
+                String salary = empSalary.getText();
+                String password = empPassword.getText();
                 // String status = empStatus.getText();
 
                 
@@ -334,7 +334,7 @@ public class ViewEmployeeForm extends JFrame {
                 String name = empName.getText();
                 String password = empPassword.getText();
                 int roleID = 0;
-                int salary = Integer.parseInt(empSalary.getText());
+                String salary = empSalary.getText();
                 // String status = empStatus.getText();
 
                 if (adminRb.isSelected()) {
@@ -347,6 +347,8 @@ public class ViewEmployeeForm extends JFrame {
                     roleID = 4;
                 } else if (humanResourceRb.isSelected()) {
                     roleID = 5;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Harus Pilih Role");
                 }
 
                 System.out.println(username + " " + name + " " + roleID + " " + salary + "\n");

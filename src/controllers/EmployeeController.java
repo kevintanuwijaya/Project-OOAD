@@ -37,12 +37,16 @@ public class EmployeeController {
 		return allEmployees;
 	}
 	
-	public Employee AddEmployee(String name, String username, int roleID, int salary, String password) {
+	public Employee AddEmployee(String name, String username, int roleID, String salary, String password) {
 		
 		//validation
+		int salaryInt = Integer.parseInt(salary);
 
 		if (name.equals("")) {
 			JOptionPane.showMessageDialog(null, "Nama harus diisi");
+			return null;
+		} else if (username.equals("")) {
+			JOptionPane.showMessageDialog(null, "Username harus diisi");
 			return null;
 		} else if (username.equals("")) {
 			JOptionPane.showMessageDialog(null, "Username harus diisi");
@@ -54,17 +58,29 @@ public class EmployeeController {
 		employee.setName(name);
 		employee.setUsername(username);
 		employee.setRoleID(roleID);
-		employee.setSalary(salary);
-		employee.setPassword(password);
+		employee.setSalary(salaryInt);
+		employee.setPassword("asdasd");
 		employee.setStatus("Active");
 		employee.InsertEmployee();
 		
 		return employee;
 	}
 	
-	public Employee UpdateEmployee(int employeeID, String name, String username, int role, String password, int salary) {
+	public Employee UpdateEmployee(int employeeID, String name, String username, int role, String password, String salary) {
 		
 		//validation
+		int salaryInt = Integer.parseInt(salary);
+
+		if (name.equals("")) {
+			JOptionPane.showMessageDialog(null, "Nama harus diisi");
+			return null;
+		} else if (username.equals("")) {
+			JOptionPane.showMessageDialog(null, "Username harus diisi");
+			return null;
+		} else if (username.equals("")) {
+			JOptionPane.showMessageDialog(null, "Username harus diisi");
+			return null;
+		}
 		
 		Employee employee = new Employee();
 		
@@ -74,7 +90,7 @@ public class EmployeeController {
 		employee.setUsername(username);
 		employee.setRoleID(role);
 		employee.setPassword(password);
-		employee.setSalary(salary);
+		employee.setSalary(salaryInt);
 		
 		employee.UpdateEmployee();
 		
