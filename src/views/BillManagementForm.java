@@ -390,7 +390,7 @@ public class BillManagementForm extends JFrame {
 
         patientNamePanel.add(patientNameLabel);
         patientNamePanel.add(patientCombo);
-        
+         
         paymentTypePanel.add(paymentTypeLabel);
         paymentTypePanel.add(paymentCombo);
         
