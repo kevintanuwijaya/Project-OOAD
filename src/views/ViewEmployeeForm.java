@@ -40,7 +40,7 @@ public class ViewEmployeeForm extends JFrame {
     private DefaultTableModel dtm;
     private JScrollPane scrollPane;
     private JButton addButton, updateButton, fireButton, clearButton, backButton;
-    private Employee employee = MainMenu.currentEmployee; 
+    private Employee employee = MainMenu.currentEmployee;
 
     ButtonGroup roleRB;
     private JRadioButton adminRb, pharmacistRb, doctorRb, nurseRb, humanResourceRb;
@@ -72,22 +72,6 @@ public class ViewEmployeeForm extends JFrame {
         /* For Center Panel */
         centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-
-        // TODO Buat inital table
-        // columnName = new Vector<>();
-        // columnName.add("Employee ID");
-        // columnName.add("Employee Name");
-        // columnName.add("Employee Salary");
-        // columnName.add("Employee Role");
-
-        // System.out.println(columnName);
-
-        // TODO Data dummy, nanti harus diganti pake data yang diambil dari data access
-        // dataDummy = new Vector<>();
-        // dataDummy.add("1");
-        // dataDummy.add("Steven Santoso Suntialto");
-        // dataDummy.add("2MiliarJuta");
-        // dataDummy.add("Single?");
 
         table = new JTable() {
             @Override
@@ -285,22 +269,16 @@ public class ViewEmployeeForm extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
 
-                if (empSalary.getText().isEmpty()){
+                if (empSalary.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Salary tidak boleh kosong");
                 }
 
-                // int employeeID = Integer.parseInt(empId.getText());
                 String username = empUsername.getText();
                 String name = empName.getText();
-                // String password = empPassword.getText();
                 int roleID = 0;
                 String salary = empSalary.getText();
                 String password = empPassword.getText();
-                // String status = empStatus.getText();
-
-                
 
                 if (adminRb.isSelected()) {
                     roleID = 1;
@@ -315,7 +293,6 @@ public class ViewEmployeeForm extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Harus Pilih Role");
                 }
-                System.out.println(username + " " + name + " " + roleID + " " + salary + "\n");
 
                 EmployeeController empController = EmployeeController.getInstance();
                 empController.AddEmployee(name, username, roleID, salary, password);
@@ -328,14 +305,12 @@ public class ViewEmployeeForm extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 String employeeID = empId.getText();
                 String username = empUsername.getText();
                 String name = empName.getText();
                 String password = empPassword.getText();
                 int roleID = 0;
                 String salary = empSalary.getText();
-                // String status = empStatus.getText();
 
                 if (adminRb.isSelected()) {
                     roleID = 1;
@@ -360,26 +335,24 @@ public class ViewEmployeeForm extends JFrame {
         });
 
         clearButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				empId.setText("");
-				empUsername.setText("");
-				empName.setText("");
-				empSalary.setText("");
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                empId.setText("");
+                empUsername.setText("");
+                empName.setText("");
+                empSalary.setText("");
 
                 roleRB.clearSelection();
 
                 loadData();
-			}
-		});
+            }
+        });
 
         fireButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 int employeeID = Integer.parseInt(empId.getText());
 
                 EmployeeController empController = EmployeeController.getInstance();
@@ -390,14 +363,14 @@ public class ViewEmployeeForm extends JFrame {
         });
 
         backButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {			
-				new MainMenu(employee);
-				dispose();
-				
-			}
-		});
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new MainMenu(employee);
+                dispose();
+
+            }
+        });
     }
 
     private void loadData() {
@@ -418,13 +391,11 @@ public class ViewEmployeeForm extends JFrame {
             dtm.addRow(row);
 
         }
-        // dtm.addRow(dataDummy);
 
         table.setModel(dtm);
     }
 
     public ViewEmployeeForm() {
-        // TODO Auto-generated constructor stub
         initItem();
         setItem();
         setListener();
