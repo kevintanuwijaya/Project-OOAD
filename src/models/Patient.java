@@ -43,6 +43,12 @@ public class Patient {
 	public void setDOB(Date dOB) {
 		DOB = dOB;
 	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return Name;
+	}
 
 	/**
 	 * 
