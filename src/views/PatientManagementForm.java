@@ -286,6 +286,7 @@ public class PatientManagementForm extends JFrame {
 				DOBDatePanel.getModel().setValue(null);
 				employeesCombo.setSelectedIndex(-1);
 				symptomField.setText("");
+				PatientDetailTabel.setModel(new DefaultTableModel());
 				loadAllDataPatient();
 			}
 		});

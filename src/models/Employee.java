@@ -248,7 +248,7 @@ public class Employee {
 
 		List<Employee> employees = new Vector<Employee>();
 
-		String sqlQuery = "SELECT * FROM employee";
+		String sqlQuery = "SELECT * FROM employee WHERE Status LIKE 'Active'";
 
 		try {
 			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);

@@ -278,6 +278,7 @@ public class MedicineManagementForm extends JFrame {
                 searchTextField.setText("");
                 medNameTextField.setText("");
                 medPriceTextField.setText("");
+                medStockTextField.setText("");
                 loadData();
             }
         });

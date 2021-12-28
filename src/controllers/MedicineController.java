@@ -103,6 +103,10 @@ public class MedicineController {
 	 * @return Medicine
 	 */
 	public Medicine deleteMedicine(String medicineID) {
+		if (medicineID.equals("")) {
+			JOptionPane.showMessageDialog(null, "Medicine ID harus dipilih");
+			return null;
+		}
 
 		Medicine medicine = new Medicine();
 

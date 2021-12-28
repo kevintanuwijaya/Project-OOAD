@@ -388,6 +388,7 @@ public class BillManagementForm extends JFrame {
                 medicineCombo.setSelectedIndex(-1);
                 quantity.setText("");
                 quantity.setEditable(false);
+                money.setText("");
                 billDetailTable.setModel(new DefaultTableModel());
                 loadData();
 
