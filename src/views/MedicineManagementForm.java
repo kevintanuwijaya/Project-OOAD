@@ -38,7 +38,6 @@ public class MedicineManagementForm extends JFrame {
     private JButton addButton, updateButton, deleteButton, clearBtn, backButton;
 
     /* For Search Form Panel */
-    private JPanel searchFormPanel; // Panel untuk 1 Search Form Panel
     private JLabel searchLabel;
     private JTextField searchTextField;
     private JButton searchButton;
@@ -156,9 +155,6 @@ public class MedicineManagementForm extends JFrame {
         searchPanel.add(searchTextField);
 
         formPanel.add(searchPanel);
-        bottomPanel.add(searchButton);
-        bottomPanel.add(clearBtn);
-        bottomPanel.add(backButton);
 
         if (currentEmployee.getRoleID() == 2) {
             idPanel.add(idLabel);
@@ -182,6 +178,10 @@ public class MedicineManagementForm extends JFrame {
             bottomPanel.add(updateButton);
             bottomPanel.add(deleteButton);
         }
+
+        bottomPanel.add(searchButton);
+        bottomPanel.add(clearBtn);
+        bottomPanel.add(backButton);
 
         formPanel.setBorder(new EmptyBorder(25, 25, 25, 25));
 
@@ -274,7 +274,6 @@ public class MedicineManagementForm extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 idTextField.setText("");
                 searchTextField.setText("");
                 medNameTextField.setText("");

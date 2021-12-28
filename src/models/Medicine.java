@@ -18,7 +18,6 @@ public class Medicine {
 	private int Stock;
 
 	public Medicine() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public int getMedicineID() {
@@ -51,6 +50,11 @@ public class Medicine {
 
 	public void setStock(int stock) {
 		Stock = stock;
+	}
+
+	@Override
+	public String toString() {
+		return Name;
 	}
 
 	/*

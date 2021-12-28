@@ -19,9 +19,8 @@ public class Bill {
 	private Date DateTimeCreated;
 	private String PaymentType;
 	private String Status;
-	
+
 	public Bill() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public int getBillID() {
@@ -71,73 +70,72 @@ public class Bill {
 	public void setStatus(String status) {
 		Status = status;
 	}
-	
+
 	/*
 	 * Get all bill from database
 	 */
-	public List<Bill> GetAllBill(){
-		
+	public List<Bill> GetAllBill() {
+
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-		
+
 		List<Bill> bill = new Vector<>();
 
-        String sqlQuery = "SELECT * FROM bill";
+		String sqlQuery = "SELECT * FROM bill";
 
-        try {
-            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
 
-            ResultSet result = stat.executeQuery(sqlQuery);
+			ResultSet result = stat.executeQuery(sqlQuery);
 
-            while (result.next()) {
-                Bill bil = new Bill();
-                bil.setBillID(result.getInt("BillID"));
-                bil.setEmployeeID(result.getInt("EmployeeID"));
-                bil.setPatientID(result.getInt("PatientID"));
-                bil.setDateTimeCreated(result.getDate("DatetimeCreated"));
-                bil.setPaymentType(result.getString("PaymentType"));
-                bil.setStatus(result.getString("Status"));
+			while (result.next()) {
+				Bill bil = new Bill();
+				bil.setBillID(result.getInt("BillID"));
+				bil.setEmployeeID(result.getInt("EmployeeID"));
+				bil.setPatientID(result.getInt("PatientID"));
+				bil.setDateTimeCreated(result.getDate("DatetimeCreated"));
+				bil.setPaymentType(result.getString("PaymentType"));
+				bil.setStatus(result.getString("Status"));
 
-                bill.add(bil);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+				bill.add(bil);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-        return bill;
+		return bill;
 	}
-	
+
 	public List<Bill> searchBill(int patientID) {
 		List<Bill> foundBill = new Vector<>();
-	    Connection conn = DatabaseConnection.getInstance().getConnection();
+		Connection conn = DatabaseConnection.getInstance().getConnection();
 
-	    String sqlQuery = "SELECT * FROM bill WHERE PatientID = ?";
-	    
+		String sqlQuery = "SELECT * FROM bill WHERE PatientID = ?";
 
-	    try {
-	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-	        stat.setInt(1, patientID);
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+			stat.setInt(1, patientID);
 
-	        ResultSet result = stat.executeQuery();
+			ResultSet result = stat.executeQuery();
 
-	        while (result.next()) {
-	        	Bill bil = new Bill();
-	            bil.setBillID(result.getInt("BillID"));
-	            bil.setEmployeeID(result.getInt("EmployeeID"));
-	            bil.setPatientID(result.getInt("PatientID"));
-	            bil.setDateTimeCreated(result.getDate("DatetimeCreated"));
-	            bil.setPaymentType(result.getString("PaymentType"));
-	            bil.setStatus(result.getString("Status"));
+			while (result.next()) {
+				Bill bil = new Bill();
+				bil.setBillID(result.getInt("BillID"));
+				bil.setEmployeeID(result.getInt("EmployeeID"));
+				bil.setPatientID(result.getInt("PatientID"));
+				bil.setDateTimeCreated(result.getDate("DatetimeCreated"));
+				bil.setPaymentType(result.getString("PaymentType"));
+				bil.setStatus(result.getString("Status"));
 
-	            foundBill.add(bil);
-	        }
+				foundBill.add(bil);
+			}
 
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-	    return foundBill;
+		return foundBill;
 	}
-	
+
 	public Bill GetBill(int billID) {
 		Bill bill = new Bill();
 		List<Bill> allBill = bill.GetAllBill();
@@ -150,57 +148,58 @@ public class Bill {
 
 		return bill;
 	}
-	
+
 	public Bill AddBill() {
-		
+
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-        
-        String sqlQuery = "INSERT INTO bill(EmployeeID, PatientID, DateTimeCreated, PaymentType, Status) VALUES(?, ?, ?, ?, ?);";
 
-        try {
-            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setInt(1, getEmployeeID());
-            stat.setInt(2, getPatientID());
-            stat.setDate(3, getDateTimeCreated());
-            stat.setString(4, getPaymentType());
-            stat.setString(5, getStatus());
+		String sqlQuery = "INSERT INTO bill(EmployeeID, PatientID, DateTimeCreated, Status) VALUES(?, ?, ?, ?);";
 
-            int result = stat.executeUpdate();
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+			stat.setInt(1, getEmployeeID());
+			stat.setInt(2, getPatientID());
+			stat.setDate(3, getDateTimeCreated());
+			stat.setString(4, getStatus());
 
-            if (result != -1) return this;
+			int result = stat.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+			if (result != -1)
+				return this;
 
-        return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
-	
+
 	public Bill UpdateBill() {
-		
+
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-		
+
 		String sqlQuery = "UPDATE bill SET EmployeeID = ?, PatientID = ?, PaymentType = ?, Status = ? WHERE BillID = ?;";
 
-        try {
-            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setInt(1, getEmployeeID());
-            stat.setInt(2, getPatientID());
-            stat.setString(3, getPaymentType());
-            stat.setString(4, getStatus());
-            stat.setInt(5, getBillID());
-            
-            System.out.println("masuk");
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+			stat.setInt(1, getEmployeeID());
+			stat.setInt(2, getPatientID());
+			stat.setString(3, getPaymentType());
+			stat.setString(4, getStatus());
+			stat.setInt(5, getBillID());
 
-            int result = stat.executeUpdate();
+			System.out.println("masuk");
 
-            if (result != -1) return this;
+			int result = stat.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+			if (result != -1)
+				return this;
 
-        return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
-	
+
 }

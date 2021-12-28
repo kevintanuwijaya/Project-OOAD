@@ -1,7 +1,6 @@
 package controllers;
 
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
@@ -150,12 +149,23 @@ public class MedicineController {
 	 * @param int stock
 	 * @return Medicine
 	 */
-	public Medicine decreaseStock(int medicineID, int stock) {
+	public Medicine decreaseStock(String medicineID, String stock) {
+
+		if (medicineID.equals("")) {
+			JOptionPane.showMessageDialog(null, "MedicineID harus diisi");
+			return null;
+		} else if (stock.equals("")) {
+			JOptionPane.showMessageDialog(null, "Stock harus diisi");
+			return null;
+		}
+
+		int medicineIDInt = Integer.parseInt(medicineID);
+		int stockInt = Integer.parseInt(stock);
 
 		Medicine medicine = new Medicine();
 
-		medicine.getMedicine(medicineID);
-		medicine.setStock(medicine.getStock() - stock);
+		medicine.getMedicine(medicineIDInt);
+		medicine.setStock(medicine.getStock() - stockInt);
 		medicine.updateMedicine();
 
 		return medicine;

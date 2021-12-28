@@ -18,9 +18,8 @@ public class PatientDetail {
 	private int EmployeeID;
 	private String Symptom;
 	private Date CheckDate;
-	
+
 	public PatientDetail() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public int getPatientID() {
@@ -62,74 +61,71 @@ public class PatientDetail {
 	public void setCheckDate(Date checkDate) {
 		CheckDate = checkDate;
 	}
-	
+
 	/**
 	 * @param patientID
 	 * @return Get all patient detail by PatientID
 	 */
-	public List<PatientDetail> GetAllPatientDetail(int patientID){
-		
+	public List<PatientDetail> GetAllPatientDetail(int patientID) {
+
 		setPatientID(patientID);
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 		List<PatientDetail> patientDetails = new Vector<PatientDetail>();
-		
+
 		String sqlQuery = "SELECT * FROM patientdetail WHERE PatientID = ?";
-		
+
 		try {
-	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-	        stat.setInt(1, getPatientID());
-	
-	        ResultSet rs = stat.executeQuery();
-	
-	        while (rs.next()) {
-	
-	            PatientDetail patientDetail = new PatientDetail();
-	            patientDetail.setPatientID(rs.getInt("PatientID"));
-	            patientDetail.setPatientDetailID(rs.getInt("PatientDetailID"));
-	            patientDetail.setEmployeeID(rs.getInt("EmployeeID"));
-	            patientDetail.setSymptom(rs.getString("Symptom"));
-	            patientDetail.setCheckDate(rs.getDate("CheckDate"));
-	            
-	            patientDetails.add(patientDetail);
-	        }
-	
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-		
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+			stat.setInt(1, getPatientID());
+
+			ResultSet rs = stat.executeQuery();
+
+			while (rs.next()) {
+
+				PatientDetail patientDetail = new PatientDetail();
+				patientDetail.setPatientID(rs.getInt("PatientID"));
+				patientDetail.setPatientDetailID(rs.getInt("PatientDetailID"));
+				patientDetail.setEmployeeID(rs.getInt("EmployeeID"));
+				patientDetail.setSymptom(rs.getString("Symptom"));
+				patientDetail.setCheckDate(rs.getDate("CheckDate"));
+
+				patientDetails.add(patientDetail);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return patientDetails;
 	}
-	
-	
+
 	/**
 	 * 
 	 * @return Insert new patientdetail to database
 	 */
 	public PatientDetail AddPatientDetail() {
-			
+
 		Connection conn = DatabaseConnection.getInstance().getConnection();
 		String sqlQuery = "INSERT INTO patientdetail (PatientID, EmployeeID, Symptom, CheckDate) VALUES (?,?,?,?)";
-		
+
 		try {
-	        PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-	        stat.setInt(1, getPatientID());
-	        stat.setInt(2, getEmployeeID());
-	        stat.setString(3, getSymptom());
-	        stat.setDate(4, getCheckDate());
-	        
-	        int add = stat.executeUpdate();
-	        
-	        if(add > 0) {
-	        	return this;
-	        }
-	
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-		
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+			stat.setInt(1, getPatientID());
+			stat.setInt(2, getEmployeeID());
+			stat.setString(3, getSymptom());
+			stat.setDate(4, getCheckDate());
+
+			int add = stat.executeUpdate();
+
+			if (add > 0) {
+				return this;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return null;
 	}
-	
-	
 
 }

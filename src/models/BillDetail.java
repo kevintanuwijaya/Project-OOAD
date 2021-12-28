@@ -18,7 +18,6 @@ public class BillDetail {
 	private int Quantity;
 
 	public BillDetail() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public int getBillDetailID() {
@@ -52,67 +51,68 @@ public class BillDetail {
 	public void setQuantity(int quantity) {
 		Quantity = quantity;
 	}
-	
+
 	/*
 	 * Add new bill detail
 	 */
 	public BillDetail AddBillDetail() {
-		
+
 		Connection conn = DatabaseConnection.getInstance().getConnection();
-		
-        String sqlQuery = "INSERT INTO billdetail (BillID, MedicineID, Quantity) VALUES (?, ?, ?);";
 
-        // Statement -> Object yang dipake buat execute
-        // static SQL statement
-        try {
-            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            stat.setInt(1, getBillID());
-            stat.setInt(2, getMedicineID());
-            stat.setInt(3, getQuantity());
+		String sqlQuery = "INSERT INTO billdetail (BillID, MedicineID, Quantity) VALUES (?, ?, ?);";
 
-            // stat.execute() -> return false kalo gagal di execute & true kalo berhasil
-            // stat.executeQuery() -> return table dalam bentuk ResultSet
+		// Statement -> Object yang dipake buat execute
+		// static SQL statement
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
+			stat.setInt(1, getBillID());
+			stat.setInt(2, getMedicineID());
+			stat.setInt(3, getQuantity());
 
-            int result = stat.executeUpdate();
+			// stat.execute() -> return false kalo gagal di execute & true kalo berhasil
+			// stat.executeQuery() -> return table dalam bentuk ResultSet
 
-            if (result != -1) return this;
+			int result = stat.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+			if (result != -1)
+				return this;
 
-        return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
-	
-	public List<BillDetail> GetAllBillDetail(int billID){
-		
-Connection conn = DatabaseConnection.getInstance().getConnection();
-		
+
+	public List<BillDetail> GetAllBillDetail(int billID) {
+
+		Connection conn = DatabaseConnection.getInstance().getConnection();
+
 		List<BillDetail> billDetailList = new Vector<>();
 
-        String sqlQuery = "SELECT * FROM billdetail WHERE BillID = ?";
+		String sqlQuery = "SELECT * FROM billdetail WHERE BillID = ?";
 
-        try {
-            PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
-            
-            stat.setInt(1, billID);
+		try {
+			PreparedStatement stat = (PreparedStatement) conn.prepareStatement(sqlQuery);
 
-            ResultSet result = stat.executeQuery();
+			stat.setInt(1, billID);
 
-            while (result.next()) {
-                BillDetail bilDetail = new BillDetail();
-                bilDetail.setBillID(result.getInt("BillID"));
-                bilDetail.setBillDetailID((result.getInt("BillDetailID")));
-                bilDetail.setMedicineID(result.getInt("MedicineID"));
-                bilDetail.setQuantity(result.getInt("Quantity"));
+			ResultSet result = stat.executeQuery();
 
-                billDetailList.add(bilDetail);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+			while (result.next()) {
+				BillDetail bilDetail = new BillDetail();
+				bilDetail.setBillID(result.getInt("BillID"));
+				bilDetail.setBillDetailID((result.getInt("BillDetailID")));
+				bilDetail.setMedicineID(result.getInt("MedicineID"));
+				bilDetail.setQuantity(result.getInt("Quantity"));
 
-        return billDetailList;
+				billDetailList.add(bilDetail);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return billDetailList;
 	}
-	
+
 }

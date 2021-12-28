@@ -1,21 +1,12 @@
 package utils;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Vector;
 
 import com.mysql.jdbc.PreparedStatement;
 
 import models.Bill;
-import models.BillDetail;
-import models.Employee;
-import models.Medicine;
-import models.Patient;
-import models.PatientDetail;
 
 public class DatabaseConnection {
 
@@ -39,9 +30,9 @@ public class DatabaseConnection {
             System.out.println("Failed");
         }
     }
-    
+
     public Connection getConnection() {
-    	return this.conn;
+        return this.conn;
     }
 
     public Boolean deleteBill(Bill bill) {
@@ -64,7 +55,7 @@ public class DatabaseConnection {
 
         return false;
     }
-    
+
     // public Boolean insertBillDetail(BillDetail billDetail) {
     // int billDetailID = billDetail.getBillDetailID();
     // int patientID = billDetail.getPatientID();
@@ -96,5 +87,5 @@ public class DatabaseConnection {
     //
     // return false;
     // }
-        
+
 }
