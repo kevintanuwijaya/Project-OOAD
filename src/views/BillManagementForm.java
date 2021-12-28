@@ -261,7 +261,9 @@ public class BillManagementForm extends JFrame {
         bottomPanel.add(searchButton);
 
         bottomPanel.add(insertDetailButton);
-        bottomPanel.add(checkoutButton);
+        if (currentEmployee.getRoleID() == 1) {
+            bottomPanel.add(checkoutButton);
+        }
         bottomPanel.add(clearFieldButton);
         bottomPanel.add(backButton);
 
