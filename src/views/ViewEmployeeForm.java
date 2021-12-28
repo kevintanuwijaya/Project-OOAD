@@ -26,8 +26,6 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-// import org.w3c.dom.events.MouseEvent;
-
 import controllers.EmployeeController;
 import models.Employee;
 
@@ -52,9 +50,6 @@ public class ViewEmployeeForm extends JFrame {
     // private JButton searchButton;
 
     private Vector<String> row;
-
-    // private Vector<String> columnName;
-    // private Vector<String> dataDummy;
 
     private JPanel rolesPanel;
 
@@ -146,8 +141,6 @@ public class ViewEmployeeForm extends JFrame {
         rolePanel.setLayout(new GridLayout(2, 2, 4, 4));
         salaryPanel = new JPanel();
         salaryPanel.setLayout(new GridLayout(2, 2, 4, 4));
-        // statusPanel = new JPanel();
-        // statusPanel.setLayout(new GridLayout(2, 2, 4, 4));
 
         rolesPanel = new JPanel(new GridLayout(1, 5));
         roleRB = new ButtonGroup();
@@ -201,14 +194,10 @@ public class ViewEmployeeForm extends JFrame {
         passwordPanel.add(empPassword);
 
         rolePanel.add(roleLabel);
-        // rolePanel.add(empRole);
         rolePanel.add(rolesPanel);
 
         salaryPanel.add(salaryLabel);
         salaryPanel.add(empSalary);
-
-        // statusPanel.add(statusLabel);
-        // statusPanel.add(empStatus);
 
         // formPanel.add(searchPanel);
         formPanel.add(idPanel);
@@ -243,13 +232,17 @@ public class ViewEmployeeForm extends JFrame {
 
             @Override
             public void mouseClicked(MouseEvent e) {
+
                 int row = table.getSelectedRow();
                 empId.setText(table.getValueAt(row, 0).toString());
                 empUsername.setText(table.getValueAt(row, 1).toString());
                 empName.setText(table.getValueAt(row, 2).toString());
                 empSalary.setText(table.getValueAt(row, 3).toString());
+                
                 Employee employee = EmployeeController.getInstance().GetEmployee(Integer.parseInt(empId.getText()));
-
+                
+                empPassword.setText(employee.getPassword().toString());
+                
                 if (employee.getRoleID() == 1) {
                     adminRb.setSelected(true);
                 } else if (employee.getRoleID() == 2) {
@@ -270,28 +263,22 @@ public class ViewEmployeeForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                if (empSalary.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Salary tidak boleh kosong");
-                }
-
                 String username = empUsername.getText();
                 String name = empName.getText();
-                int roleID = 0;
+                String roleID = "0";
                 String salary = empSalary.getText();
                 String password = empPassword.getText();
 
                 if (adminRb.isSelected()) {
-                    roleID = 1;
+                    roleID = "1";
                 } else if (pharmacistRb.isSelected()) {
-                    roleID = 2;
+                    roleID = "2";
                 } else if (doctorRb.isSelected()) {
-                    roleID = 3;
+                    roleID = "3";
                 } else if (nurseRb.isSelected()) {
-                    roleID = 4;
+                    roleID = "4";
                 } else if (humanResourceRb.isSelected()) {
-                    roleID = 5;
-                } else {
-                    JOptionPane.showMessageDialog(null, "Harus Pilih Role");
+                    roleID = "5";
                 }
 
                 EmployeeController empController = EmployeeController.getInstance();
@@ -305,28 +292,31 @@ public class ViewEmployeeForm extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                if (empId.getText().equals("")){
+                    JOptionPane.showMessageDialog(null, "Harus pilih employee pada list table!!!");
+                    return;
+                }
+
                 String employeeID = empId.getText();
                 String username = empUsername.getText();
                 String name = empName.getText();
                 String password = empPassword.getText();
-                int roleID = 0;
+                String roleID = "0";
                 String salary = empSalary.getText();
 
                 if (adminRb.isSelected()) {
-                    roleID = 1;
+                    roleID = "1";
                 } else if (pharmacistRb.isSelected()) {
-                    roleID = 2;
+                    roleID = "2";
                 } else if (doctorRb.isSelected()) {
-                    roleID = 3;
+                    roleID = "3";
                 } else if (nurseRb.isSelected()) {
-                    roleID = 4;
+                    roleID = "4";
                 } else if (humanResourceRb.isSelected()) {
-                    roleID = 5;
-                } else {
-                    JOptionPane.showMessageDialog(null, "Harus Pilih Role");
+                    roleID = "5";
                 }
 
-                System.out.println(username + " " + name + " " + roleID + " " + salary + "\n");
                 EmployeeController empController = EmployeeController.getInstance();
                 empController.UpdateEmployee(employeeID, name, username, roleID, password, salary);
                 loadData();
@@ -335,24 +325,31 @@ public class ViewEmployeeForm extends JFrame {
         });
 
         clearButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                empId.setText("");
-                empUsername.setText("");
-                empName.setText("");
-                empSalary.setText("");
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				empId.setText("");
+				empUsername.setText("");
+				empName.setText("");
+				empSalary.setText("");
+                empPassword.setText("");
 
                 roleRB.clearSelection();
 
                 loadData();
-            }
-        });
+			}
+		});
 
         fireButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                if (empId.getText().equals("")){
+                    JOptionPane.showMessageDialog(null, "Harus pilih employee pada list table!!!");
+                    return;
+                }
+
                 int employeeID = Integer.parseInt(empId.getText());
 
                 EmployeeController empController = EmployeeController.getInstance();
@@ -363,19 +360,19 @@ public class ViewEmployeeForm extends JFrame {
         });
 
         backButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new MainMenu(employee);
-                dispose();
-
-            }
-        });
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {			
+				new MainMenu(employee);
+				dispose();
+				
+			}
+		});
     }
 
     private void loadData() {
         Object[] header = { "Employee Id", "Employee Username", "Employee Name", "Employee Salary", "Employee Role",
-                "Employee Status" };
+                "Employee Status"};
 
         dtm = new DefaultTableModel(header, 0);
         List<Employee> emps = EmployeeController.getInstance().GetAllEmployee();
@@ -388,6 +385,7 @@ public class ViewEmployeeForm extends JFrame {
             row.add(Integer.toString(employee.getSalary()));
             row.add(Integer.toString(employee.getRoleID()));
             row.add(employee.getStatus());
+            // row.add(employee.getPassword());
             dtm.addRow(row);
 
         }

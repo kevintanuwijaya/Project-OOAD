@@ -37,75 +37,78 @@ public class EmployeeController {
 		return allEmployees;
 	}
 	
-	public Employee AddEmployee(String name, String username, int roleID, String salary, String password) {
-		
-		//validation
-		int salaryInt = Integer.parseInt(salary);
+	public Employee AddEmployee(String name, String username, String roleID, String salary, String password) {
 
-		if (name.equals("")) {
-			JOptionPane.showMessageDialog(null, "Nama harus diisi");
-			return null;
-		} else if (username.equals("")) {
-			JOptionPane.showMessageDialog(null, "Username harus diisi");
-			return null;
-		} else if (salary.equals("")) {
-			JOptionPane.showMessageDialog(null, "Salary harus diisi");
-			return null;
-		} else if (password.equals("")) {
-			JOptionPane.showMessageDialog(null, "Password harus diisi");
-			return null;
-		}
-		
-		Employee employee = new Employee();
-		
-		employee.setName(name);
-		employee.setUsername(username);
-		employee.setRoleID(roleID);
-		employee.setSalary(salaryInt);
-		employee.setPassword(password);
-		employee.setStatus("Active");
-		employee.InsertEmployee();
-		
-		return employee;
-	}
+        if (username.equals("")) {
+            JOptionPane.showMessageDialog(null, "Username harus diisi");
+            return null;
+        } else if (name.equals("")) {
+            JOptionPane.showMessageDialog(null, "Name harus diisi");
+            return null;
+        } else if (password.equals("")) {
+            JOptionPane.showMessageDialog(null, "Password harus diisi");
+            return null;
+        } else if (roleID.equals("0")){
+            JOptionPane.showMessageDialog(null, "Role harus dipilih");
+            return null;
+        } else if (salary.equals("")) {
+            JOptionPane.showMessageDialog(null, "Salary harus diisi");
+            return null;
+        } 
+
+		int salaryInt = Integer.parseInt(salary);
+        int roleIDInt = Integer.parseInt(roleID);
+
+        Employee employee = new Employee();
+
+        employee.setName(name);
+        employee.setUsername(username);
+        employee.setRoleID(roleIDInt);
+        employee.setSalary(salaryInt);
+        employee.setPassword(password);
+        employee.setStatus("Active");
+        employee.InsertEmployee();
+
+        return employee;
+    }
 	
-	public Employee UpdateEmployee(String employeeID, String name, String username, int role, String password, String salary) {
-		
-		//validation
-		int employeeIDInt = Integer.parseInt(employeeID);
-		int salaryInt = Integer.parseInt(salary);
-		
-		if (employeeID.equals("")) {
-			JOptionPane.showMessageDialog(null, "Pilih List pada Table untuk dapatkan ID");
-			return null;
-		} else if (name.equals("")) {
-			JOptionPane.showMessageDialog(null, "Nama harus diisi");
-			return null;
-		} else if (username.equals("")) {
-			JOptionPane.showMessageDialog(null, "Username harus diisi");
-			return null;
-		} else if (username.equals("")) {
-			JOptionPane.showMessageDialog(null, "Salary harus diisi");
-			return null;
-		} else if (password.equals("")) {
-			JOptionPane.showMessageDialog(null, "Password harus diisi");
-			return null;
-		}
-		
-		Employee employee = new Employee();
-		
-		employee = employee.GetEmployee(employeeIDInt);
+	public Employee UpdateEmployee(String employeeID, String name, String username, String roleID, String password, String salary) {
 
-		employee.setName(name);
-		employee.setUsername(username);
-		employee.setRoleID(role);
-		employee.setPassword(password);
-		employee.setSalary(salaryInt);
-		
-		employee.UpdateEmployee();
-		
-		return employee;
-	}
+        if (username.equals("")) {
+            JOptionPane.showMessageDialog(null, "Username harus diisi");
+            return null;
+        } else if (name.equals("")) {
+            JOptionPane.showMessageDialog(null, "Name harus diisi");
+            return null;
+        } else if (password.equals("")) {
+            JOptionPane.showMessageDialog(null, "Password harus diisi");
+            return null;
+        } else if (roleID.equals("0")){
+            JOptionPane.showMessageDialog(null, "Role harus dipilih");
+            return null;
+        } else if (username.equals("")) {
+            JOptionPane.showMessageDialog(null, "Salary harus diisi");
+            return null;
+        }
+
+		int employeeIDInt = Integer.parseInt(employeeID);
+        int salaryInt = Integer.parseInt(salary);
+        int roleIDInt = Integer.parseInt(roleID);
+
+        Employee employee = new Employee();
+
+        employee = employee.GetEmployee(employeeIDInt);
+
+        employee.setName(name);
+        employee.setUsername(username);
+        employee.setRoleID(roleIDInt);
+        employee.setPassword(password);
+        employee.setSalary(salaryInt);
+
+        employee.UpdateEmployee();
+
+        return employee;
+    }
 	
 	public Employee FireEmployee(int employeeID) {
 		

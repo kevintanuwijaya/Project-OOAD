@@ -105,6 +105,7 @@ public class Employee {
 				setName(rs.getString("Name"));
 				setSalary(rs.getInt("Salary"));
 				setStatus(rs.getNString("Status"));
+				setPassword(rs.getNString("Password"));
 
 				return this;
 			}
